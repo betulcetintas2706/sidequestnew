@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trophy, Flame, Star, MapPin, Camera, Award, Compass, Archive } from 'lucide-react';
+import { Star, MapPin, Camera, Award, Compass, Archive } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 
 export default function CompletionPage() {
@@ -18,10 +18,8 @@ export default function CompletionPage() {
   const [showBadge, setShowBadge] = useState(false);
 
   useEffect(() => {
-    // Update profile
     addPoints(pointsEarned);
     incrementStreak();
-
     const t1 = setTimeout(() => setAnimateIn(true), 100);
     const t2 = setTimeout(() => setShowBadge(true), 1200);
     return () => { clearTimeout(t1); clearTimeout(t2); };
@@ -49,7 +47,6 @@ export default function CompletionPage() {
         <div className="w-36 h-36 rounded-full bg-accent/15 flex items-center justify-center">
           <Star className="text-accent" size={64} strokeWidth={1.5} />
         </div>
-        {/* Glow effect */}
         <div className="absolute inset-0 rounded-full bg-accent/10 blur-2xl -z-10" />
       </motion.div>
 
@@ -72,21 +69,9 @@ export default function CompletionPage() {
         className="ios-card p-5 w-full mb-4"
       >
         <div className="flex justify-around mb-4">
-          <div className="flex flex-col items-center gap-1.5">
-            <MapPin className="text-secondary" size={18} />
-            <span className="text-xl font-semibold text-foreground">{stopsVisited}</span>
-            <span className="text-[10px] text-muted-foreground">Stops visited</span>
-          </div>
-          <div className="flex flex-col items-center gap-1.5">
-            <Star className="text-accent" size={18} />
-            <span className="text-xl font-semibold text-foreground">{pointsEarned}</span>
-            <span className="text-[10px] text-muted-foreground">Points earned</span>
-          </div>
-          <div className="flex flex-col items-center gap-1.5">
-            <Camera className="text-primary" size={18} />
-            <span className="text-xl font-semibold text-foreground">{memories.length}</span>
-            <span className="text-[10px] text-muted-foreground">Memories</span>
-          </div>
+          <StatItem icon={<MapPin className="text-secondary" size={18} />} value={stopsVisited} label="Stops visited" />
+          <StatItem icon={<Star className="text-accent" size={18} />} value={pointsEarned} label="Points earned" />
+          <StatItem icon={<Camera className="text-primary" size={18} />} value={memories.length} label="Memories" />
         </div>
 
         <div className="h-px bg-border mb-4" />
@@ -140,6 +125,16 @@ export default function CompletionPage() {
           <Archive size={16} /> View Memory Vault
         </button>
       </motion.div>
+    </div>
+  );
+}
+
+function StatItem({ icon, value, label }: { icon: React.ReactNode; value: number; label: string }) {
+  return (
+    <div className="flex flex-col items-center gap-1.5">
+      {icon}
+      <span className="text-xl font-semibold text-foreground">{value}</span>
+      <span className="text-[10px] text-muted-foreground">{label}</span>
     </div>
   );
 }
