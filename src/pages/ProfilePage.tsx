@@ -38,16 +38,14 @@ export default function ProfilePage() {
       <div className="px-5 mb-6">
         <div className="flex gap-3">
           {[
-            { icon: Star, value: user.points, label: 'Points', color: 'text-accent', bg: 'bg-accent/15' },
-            { icon: Map, value: user.routesCompleted, label: 'Routes', color: 'text-secondary', bg: 'bg-secondary/15' },
-            { icon: Camera, value: memories.length, label: 'Memories', color: 'text-primary', bg: 'bg-primary/15' },
-          ].map(({ icon: Icon, value, label, color, bg }) => (
-            <div key={label} className="ios-card flex-1 p-3 text-center">
-              <div className={`w-9 h-9 rounded-xl ${bg} flex items-center justify-center mx-auto mb-1.5`}>
-                <Icon className={color} size={18} />
-              </div>
-              <p className="text-lg font-semibold text-foreground">{value}</p>
-              <p className="text-[10px] text-muted-foreground">{label}</p>
+            { icon: Star, value: user.points, label: 'Points', color: 'text-accent', borderColor: 'border-accent/20' },
+            { icon: Map, value: user.routesCompleted, label: 'Routes', color: 'text-secondary', borderColor: 'border-secondary/20' },
+            { icon: Camera, value: memories.length, label: 'Memories', color: 'text-primary', borderColor: 'border-primary/20' },
+          ].map(({ icon: Icon, value, label, color, borderColor }) => (
+            <div key={label} className={`ios-card flex-1 py-4 flex flex-col items-center gap-2 border ${borderColor}`}>
+              <Icon className={color} size={20} />
+              <span className="text-xl font-bold text-foreground">{value}</span>
+              <span className="text-[10px] text-muted-foreground">{label}</span>
             </div>
           ))}
         </div>
