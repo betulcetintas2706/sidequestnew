@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Compass, MapPin } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+import sideQuestLogo from '@/assets/sidequest-logo.png';
 
 export default function HeroPage() {
   const navigate = useNavigate();
@@ -25,14 +26,14 @@ export default function HeroPage() {
         className="flex flex-col items-center text-center max-w-sm"
       >
         {/* Logo */}
-        <motion.div
+        <motion.img
+          src={sideQuestLogo}
+          alt="SideQuest logo"
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.6 }}
-          className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center mb-6 shadow-ios-lg"
-        >
-          <Compass className="text-primary-foreground" size={32} />
-        </motion.div>
+          className="w-20 h-20 rounded-2xl mb-6 shadow-ios-lg object-contain"
+        />
 
         <motion.h1
           initial={{ opacity: 0, y: 10 }}
