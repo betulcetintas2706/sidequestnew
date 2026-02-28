@@ -4,7 +4,7 @@ import { Spot } from '@/types';
 
 declare const google: any;
 
-const GOOGLE_MAPS_KEY = 'AIzaSyBmeki2tfqLQG4QEjBJTq1Tco63N4aLRqs';
+const GOOGLE_MAPS_KEY = 'AIzaSyBf1WQZiyQDjhJ54KBv5Np_V6M-2cCHBSE';
 
 const DARK_MAP_STYLE = [
   { elementType: 'geometry', stylers: [{ color: '#1d1d2b' }] },

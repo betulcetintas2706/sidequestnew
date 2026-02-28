@@ -1,5 +1,6 @@
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Flame, Compass, UtensilsCrossed, TreePine, Palette, Users, Sparkles, Star } from 'lucide-react';
+import { Flame, Compass, UtensilsCrossed, TreePine, Palette, Users, Sparkles, Target, Star } from 'lucide-react';
 import BottomTabBar from '@/components/BottomTabBar';
 import { NavigatorMode } from '@/types';
 
@@ -40,15 +41,18 @@ function PointsBadge({ points }: { points: number }) {
 }
 
 export default function ChallengesPage() {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-background pb-24">
       <div className="px-5 pt-14 pb-2">
+        {/* Header */}
         <h1 className="text-2xl font-display text-foreground">Challenges</h1>
         <p className="text-sm text-muted-foreground mt-1">Earn points and badges by exploring</p>
       </div>
 
-      {/* Daily challenge highlight */}
       <div className="px-5 mt-5 mb-5">
+        {/* Daily challenge highlight */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

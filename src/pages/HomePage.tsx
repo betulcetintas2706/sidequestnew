@@ -1,26 +1,26 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Star, Flame, Map, Compass, UtensilsCrossed, TreePine, Palette, Users, Sparkles } from 'lucide-react';
+import { Star, Flame, Map, Compass } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { NavigatorMode } from '@/types';
 import BottomTabBar from '@/components/BottomTabBar';
 
-const modes: { id: NavigatorMode; icon: typeof Compass; label: string; tagline: string }[] = [
-  { id: 'adventure', icon: Compass, label: 'Adventure', tagline: 'Urban exploration, rooftops & hidden passages' },
-  { id: 'foodie', icon: UtensilsCrossed, label: 'Foodie', tagline: 'Cafés, street food & hole-in-the-wall gems' },
-  { id: 'nature', icon: TreePine, label: 'Nature', tagline: 'Parks, trails, gardens & waterways' },
-  { id: 'culture', icon: Palette, label: 'Culture', tagline: 'Murals, galleries & historic landmarks' },
-  { id: 'social', icon: Users, label: 'Social', tagline: 'Markets, community spaces & live music' },
-  { id: 'mystery', icon: Sparkles, label: 'Mystery', tagline: 'Random surprises — no spoilers' },
+const modes: { id: NavigatorMode; emoji: string; label: string; tagline: string }[] = [
+  { id: 'adventure', emoji: '🧭', label: 'Adventure', tagline: 'Urban exploration, rooftops & hidden passages' },
+  { id: 'foodie', emoji: '🍜', label: 'Foodie', tagline: 'Cafés, street food & hole-in-the-wall gems' },
+  { id: 'nature', emoji: '🌿', label: 'Nature', tagline: 'Parks, trails, gardens & waterways' },
+  { id: 'culture', emoji: '🎭', label: 'Culture', tagline: 'Murals, galleries & historic landmarks' },
+  { id: 'social', emoji: '🤝', label: 'Social', tagline: 'Markets, community spaces & live music' },
+  { id: 'mystery', emoji: '🔮', label: 'Mystery', tagline: 'Random surprises — no spoilers' },
 ];
 
-const modeColorMap: Record<NavigatorMode, { text: string; bg: string; activeBg: string }> = {
-  adventure: { text: 'text-primary', bg: 'bg-muted', activeBg: 'bg-primary' },
-  foodie: { text: 'text-accent', bg: 'bg-muted', activeBg: 'bg-accent' },
-  nature: { text: 'text-secondary', bg: 'bg-muted', activeBg: 'bg-secondary' },
-  culture: { text: 'text-primary', bg: 'bg-muted', activeBg: 'bg-primary' },
-  social: { text: 'text-accent', bg: 'bg-muted', activeBg: 'bg-accent' },
-  mystery: { text: 'text-secondary', bg: 'bg-muted', activeBg: 'bg-secondary' },
+const modeColors: Record<NavigatorMode, string> = {
+  adventure: 'text-primary',
+  foodie: 'text-accent',
+  nature: 'text-secondary',
+  culture: 'text-primary',
+  social: 'text-accent',
+  mystery: 'text-secondary',
 };
 
 export default function HomePage() {
@@ -29,7 +29,6 @@ export default function HomePage() {
 
   const selectedMode = routeConfig.mode || 'adventure';
   const currentModeData = modes.find(m => m.id === selectedMode)!;
-  const modeColors = modeColorMap[selectedMode];
 
   const handleModeSelect = (mode: NavigatorMode) => {
     setRouteConfig({ mode });
@@ -58,50 +57,45 @@ export default function HomePage() {
         <p className="text-sm text-muted-foreground mt-1">What will you discover today?</p>
       </div>
 
-      {/* Quick Stats — StatCard style */}
+      {/* Stats */}
       <div className="px-5 mt-5 mb-6">
         <div className="flex gap-3">
           {[
-            { icon: Star, value: user.points, label: 'Points', color: 'text-accent', borderColor: 'border-accent/20' },
-            { icon: Flame, value: `${user.streak}d`, label: 'Streak', color: 'text-primary', borderColor: 'border-primary/20' },
-            { icon: Map, value: user.routesCompleted, label: 'Routes', color: 'text-secondary', borderColor: 'border-secondary/20' },
-          ].map(({ icon: Icon, value, label, color, borderColor }) => (
-            <div key={label} className={`ios-card flex-1 py-4 flex flex-col items-center gap-2 border ${borderColor}`}>
-              <Icon className={color} size={20} />
-              <span className="text-xl font-bold text-foreground">{value}</span>
-              <span className="text-[10px] text-muted-foreground">{label}</span>
+            { icon: Star, value: user.points, label: 'Points', color: 'text-accent', bg: 'bg-accent/15' },
+            { icon: Flame, value: `${user.streak}d`, label: 'Streak', color: 'text-primary', bg: 'bg-primary/15' },
+            { icon: Map, value: user.routesCompleted, label: 'Routes', color: 'text-secondary', bg: 'bg-secondary/15' },
+          ].map(({ icon: Icon, value, label, color, bg }) => (
+            <div key={label} className="ios-card flex-1 p-3 text-center">
+              <div className={`w-9 h-9 rounded-xl ${bg} flex items-center justify-center mx-auto mb-1.5`}>
+                <Icon className={color} size={18} />
+              </div>
+              <p className="text-lg font-semibold text-foreground">{value}</p>
+              <p className="text-[10px] text-muted-foreground">{label}</p>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Mode selection — ModePill circles */}
+      {/* Mode selection */}
       <div className="mb-6">
         <h3 className="text-sm font-semibold text-foreground px-5 mb-3">Choose your vibe</h3>
-        <div className="flex gap-4 overflow-x-auto px-5 pb-2 scrollbar-hide">
-          {modes.map(mode => {
-            const isSelected = selectedMode === mode.id;
-            const colors = modeColorMap[mode.id];
-            const Icon = mode.icon;
-            return (
-              <button
-                key={mode.id}
-                onClick={() => handleModeSelect(mode.id)}
-                className="flex flex-col items-center gap-2 flex-shrink-0"
-              >
-                <div className={`w-14 h-14 rounded-full flex items-center justify-center transition-all ${
-                  isSelected ? `${colors.activeBg} shadow-lg` : 'bg-muted'
-                }`}>
-                  <Icon size={22} className={isSelected ? 'text-primary-foreground' : 'text-muted-foreground'} />
-                </div>
-                <span className={`text-xs font-medium ${isSelected ? 'text-foreground' : 'text-muted-foreground'}`}>
-                  {mode.label}
-                </span>
-              </button>
-            );
-          })}
+        <div className="flex gap-3 overflow-x-auto px-5 pb-2 scrollbar-hide">
+          {modes.map(mode => (
+            <button
+              key={mode.id}
+              onClick={() => handleModeSelect(mode.id)}
+              className={`flex-shrink-0 px-4 py-2.5 rounded-2xl text-sm font-medium flex items-center gap-2 transition-all ${
+                selectedMode === mode.id
+                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  : 'ios-card text-foreground'
+              }`}
+            >
+              <span>{mode.emoji}</span>
+              {mode.label}
+            </button>
+          ))}
         </div>
-        <p className={`text-xs px-5 mt-2 ${modeColors.text} transition-colors`}>
+        <p className={`text-xs px-5 mt-2 ${modeColors[selectedMode]} transition-colors`}>
           {currentModeData.tagline}
         </p>
       </div>
@@ -111,13 +105,13 @@ export default function HomePage() {
         <motion.button
           whileTap={{ scale: 0.98 }}
           onClick={handleStartRoute}
-          className={`w-full py-4 rounded-2xl ${modeColors.activeBg} text-primary-foreground font-semibold text-base flex items-center justify-center gap-2 shadow-ios-lg`}
+          className="w-full py-4 rounded-2xl bg-primary text-primary-foreground font-semibold text-base flex items-center justify-center gap-2 shadow-ios-lg"
         >
           <Compass size={18} /> Start a Route
         </motion.button>
         <button
           onClick={() => navigate('/explore')}
-          className="w-full py-3.5 rounded-2xl bg-secondary/15 text-secondary border border-secondary/30 font-medium text-sm"
+          className="w-full py-3.5 rounded-2xl bg-muted text-foreground font-medium text-sm"
         >
           Explore Nearby
         </button>
