@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Paintbrush, Coffee, TreePine, Binoculars, ShoppingBasket, Image, Flower2, Landmark } from 'lucide-react';
+import { Paintbrush, Coffee, TreePine, Binoculars, ShoppingBasket, Image, Flower2, Landmark } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import BottomTabBar from '@/components/BottomTabBar';
+import GoogleMapComponent from '@/components/GoogleMapView';
 
 const categories: { name: string; icon: typeof Paintbrush; colorClass: string; bgClass: string; activeClass: string }[] = [
   { name: 'Murals', icon: Paintbrush, colorClass: 'text-primary', bgClass: 'bg-primary/15', activeClass: 'bg-primary' },
@@ -35,16 +36,12 @@ export default function ExplorePage() {
         <p className="text-[11px] text-muted-foreground mt-1">Enable location to discover what's around you</p>
       </div>
 
-      {/* Map preview placeholder */}
+      {/* Map preview */}
       <div className="px-5 mt-4 mb-5">
-        <div className="h-44 bg-secondary/15 rounded-2xl relative overflow-hidden">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="flex flex-col items-center gap-2 text-secondary">
-              <MapPin size={28} />
-              <span className="text-xs font-medium">Explore Map</span>
-            </div>
-          </div>
-        </div>
+        <GoogleMapComponent
+          isInteractive={false}
+          className="h-44 rounded-2xl overflow-hidden"
+        />
       </div>
 
       {/* Category heading */}

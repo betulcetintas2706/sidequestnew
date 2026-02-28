@@ -1,14 +1,20 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, Camera, SkipForward, CheckCircle, X, Volume2 } from 'lucide-react';
+import { Camera, SkipForward, CheckCircle, X, Volume2 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+import GoogleMapComponent from '@/components/GoogleMapView';
 
 export default function ActiveNavPage() {
   const navigate = useNavigate();
   const { currentRoute, addPoints } = useApp();
   const [currentStopIdx, setCurrentStopIdx] = useState(0);
   const [checkedIn, setCheckedIn] = useState<Set<number>>(new Set());
+
+  // Convert index-based checked-in to ID-based for map
+  const checkedInIds = currentRoute
+    ? new Set(Array.from(checkedIn).map(i => currentRoute.stops[i]?.id).filter(Boolean))
+    : new Set<string>();
 
   if (!currentRoute) {
     navigate('/home');
@@ -42,13 +48,14 @@ export default function ActiveNavPage() {
   return (
     <div className="min-h-screen bg-background relative">
       {/* Map area */}
-      <div className="h-[55vh] bg-secondary/15 relative">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="flex flex-col items-center gap-2 text-secondary">
-            <MapPin size={40} className="animate-pulse-soft" />
-            <span className="text-xs font-medium">Live Navigation</span>
-          </div>
-        </div>
+      <div className="h-[55vh] relative">
+        <GoogleMapComponent
+          stops={currentRoute.stops}
+          checkedInStops={checkedInIds}
+          currentStopIndex={currentStopIdx}
+          showRoute
+          className="h-full w-full"
+        />
 
         <button
           onClick={navigateToCompletion}
