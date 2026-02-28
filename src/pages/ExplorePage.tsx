@@ -1,71 +1,89 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Filter } from 'lucide-react';
-import { seedSpots } from '@/data/seedData';
-import { NavigatorMode } from '@/types';
+import { MapPin, Paintbrush, Coffee, TreePine, Binoculars, ShoppingBasket, Image, Flower2, Landmark } from 'lucide-react';
+import { useApp } from '@/context/AppContext';
 import BottomTabBar from '@/components/BottomTabBar';
 
-const filters: { id: NavigatorMode | 'all'; label: string }[] = [
-  { id: 'all', label: 'All' },
-  { id: 'adventure', label: '🧭 Adventure' },
-  { id: 'foodie', label: '🍜 Foodie' },
-  { id: 'nature', label: '🌿 Nature' },
-  { id: 'culture', label: '🎭 Culture' },
-  { id: 'mystery', label: '🔮 Mystery' },
+const categories: { name: string; icon: typeof Paintbrush; colorClass: string; bgClass: string; activeClass: string }[] = [
+  { name: 'Murals', icon: Paintbrush, colorClass: 'text-primary', bgClass: 'bg-primary/15', activeClass: 'bg-primary' },
+  { name: 'Cafes', icon: Coffee, colorClass: 'text-accent', bgClass: 'bg-accent/15', activeClass: 'bg-accent' },
+  { name: 'Parks', icon: TreePine, colorClass: 'text-secondary', bgClass: 'bg-secondary/15', activeClass: 'bg-secondary' },
+  { name: 'Viewpoints', icon: Binoculars, colorClass: 'text-primary', bgClass: 'bg-primary/15', activeClass: 'bg-primary' },
+  { name: 'Markets', icon: ShoppingBasket, colorClass: 'text-destructive', bgClass: 'bg-destructive/15', activeClass: 'bg-destructive' },
+  { name: 'Galleries', icon: Image, colorClass: 'text-accent', bgClass: 'bg-accent/15', activeClass: 'bg-accent' },
+  { name: 'Gardens', icon: Flower2, colorClass: 'text-secondary', bgClass: 'bg-secondary/15', activeClass: 'bg-secondary' },
+  { name: 'Historic', icon: Landmark, colorClass: 'text-accent', bgClass: 'bg-accent/15', activeClass: 'bg-accent' },
 ];
 
 export default function ExplorePage() {
-  const [activeFilter, setActiveFilter] = useState<NavigatorMode | 'all'>('all');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { setRouteConfig } = useApp();
 
-  const spots = activeFilter === 'all' ? seedSpots : seedSpots.filter(s => s.modeTags.includes(activeFilter));
+  const handleFindNearby = () => {
+    if (selectedCategory) {
+      setRouteConfig({ mode: 'adventure', destination: selectedCategory });
+      navigate('/route-preview');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background pb-24">
-      {/* Map placeholder */}
-      <div className="h-64 bg-secondary/15 relative">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="flex flex-col items-center gap-2 text-secondary">
-            <MapPin size={32} />
-            <span className="text-xs font-medium">Explore Map</span>
+      <div className="px-5 pt-14 pb-2">
+        {/* Header */}
+        <h1 className="text-2xl font-display text-foreground">Explore Nearby</h1>
+        <p className="text-[11px] text-muted-foreground mt-1">Enable location to discover what's around you</p>
+      </div>
+
+      {/* Map preview placeholder */}
+      <div className="px-5 mt-4 mb-5">
+        <div className="h-44 bg-secondary/15 rounded-2xl relative overflow-hidden">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="flex flex-col items-center gap-2 text-secondary">
+              <MapPin size={28} />
+              <span className="text-xs font-medium">Explore Map</span>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Filters */}
-      <div className="px-5 pt-4 pb-2">
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-          {filters.map(f => (
-            <button
-              key={f.id}
-              onClick={() => setActiveFilter(f.id)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${activeFilter === f.id ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}
-            >
-              {f.label}
-            </button>
-          ))}
-        </div>
+      {/* Category heading */}
+      <div className="px-5 mb-3">
+        <h3 className="text-sm font-semibold text-foreground">What are you looking for?</h3>
       </div>
 
-      {/* Spot list */}
-      <div className="px-5 space-y-3">
-        {spots.map(spot => (
-          <button
-            key={spot.id}
-            onClick={() => navigate('/stop/' + spot.id)}
-            className="w-full ios-card p-4 flex items-center gap-3 text-left"
-          >
-            <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center flex-shrink-0">
-              <MapPin className="text-primary" size={20} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-foreground truncate">{spot.name}</p>
-              <p className="text-[11px] text-muted-foreground">{spot.category}</p>
-              <p className="text-[11px] text-muted-foreground mt-0.5 truncate">{spot.shortDescription}</p>
-            </div>
-          </button>
-        ))}
+      {/* Category grid */}
+      <div className="px-5 grid grid-cols-2 gap-3">
+        {categories.map(({ name, icon: Icon, colorClass, activeClass }) => {
+          const isSelected = selectedCategory === name;
+          return (
+            <button
+              key={name}
+              onClick={() => setSelectedCategory(prev => prev === name ? null : name)}
+              className={`flex items-center gap-2.5 p-3.5 rounded-2xl text-left transition-all ${
+                isSelected
+                  ? `${activeClass} text-primary-foreground`
+                  : 'ios-card'
+              }`}
+            >
+              <Icon size={18} className={isSelected ? 'text-primary-foreground' : colorClass} />
+              <span className={`text-sm font-medium ${isSelected ? 'text-primary-foreground' : 'text-foreground'}`}>{name}</span>
+            </button>
+          );
+        })}
       </div>
+
+      {/* Quick start button */}
+      {selectedCategory && (
+        <div className="px-5 mt-6">
+          <button
+            onClick={handleFindNearby}
+            className="w-full py-4 rounded-2xl bg-primary text-primary-foreground font-semibold text-base active:scale-[0.98] transition-transform"
+          >
+            Find {selectedCategory} Nearby
+          </button>
+        </div>
+      )}
 
       <BottomTabBar />
     </div>
