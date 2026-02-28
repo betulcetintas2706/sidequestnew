@@ -7,10 +7,11 @@ import { AppProvider, useApp } from "@/context/AppContext";
 import HeroPage from "./pages/HeroPage";
 import OnboardingPage from "./pages/OnboardingPage";
 import HomePage from "./pages/HomePage";
-import ModeSelectPage from "./pages/ModeSelectPage";
-import RouteSetupPage from "./pages/RouteSetupPage";
+import ShapeAdventurePage from "./pages/ShapeAdventurePage";
 import RoutePreviewPage from "./pages/RoutePreviewPage";
 import ActiveNavPage from "./pages/ActiveNavPage";
+import MemoryCapturePage from "./pages/MemoryCapturePage";
+import CompletionPage from "./pages/CompletionPage";
 import ExplorePage from "./pages/ExplorePage";
 import VaultPage from "./pages/VaultPage";
 import ChallengesPage from "./pages/ChallengesPage";
@@ -32,10 +33,11 @@ function AppRoutes() {
       <Route path="/" element={hasSeenHero ? <Navigate to="/home" /> : <HeroPage />} />
       <Route path="/onboarding" element={<OnboardingPage />} />
       <Route path="/home" element={<HomePage />} />
-      <Route path="/mode-select" element={<ModeSelectPage />} />
-      <Route path="/route-setup" element={<RouteSetupPage />} />
+      <Route path="/shape-adventure" element={<ShapeAdventurePage />} />
       <Route path="/route-preview" element={<RoutePreviewPage />} />
       <Route path="/active-nav" element={<ActiveNavPage />} />
+      <Route path="/memory-capture" element={<MemoryCapturePage />} />
+      <Route path="/completion" element={<CompletionPage />} />
       <Route path="/explore" element={<ExplorePage />} />
       <Route path="/vault" element={<VaultPage />} />
       <Route path="/challenges" element={<ChallengesPage />} />

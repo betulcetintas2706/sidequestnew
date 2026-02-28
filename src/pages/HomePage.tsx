@@ -46,7 +46,7 @@ export default function HomePage() {
       <div className="px-5 mb-6">
         <motion.button
           whileTap={{ scale: 0.98 }}
-          onClick={() => navigate('/mode-select')}
+          onClick={() => navigate('/shape-adventure')}
           className="w-full ios-card p-5 flex items-center gap-4 shadow-ios-lg"
         >
           <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center shadow-ios">
