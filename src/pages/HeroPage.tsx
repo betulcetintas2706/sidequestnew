@@ -32,7 +32,7 @@ export default function HeroPage() {
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.6 }}
-          className="w-20 h-20 rounded-2xl mb-6 shadow-ios-lg object-contain"
+          className="w-32 h-32 rounded-2xl mb-6 shadow-ios-lg object-contain"
         />
 
         <motion.h1
