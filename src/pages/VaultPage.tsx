@@ -1,72 +1,95 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Heart, MapPin, Lock, Globe } from 'lucide-react';
+import { Lock, Globe, ImageIcon } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import BottomTabBar from '@/components/BottomTabBar';
 
+type VaultFilter = 'all' | 'private' | 'public';
+
 export default function VaultPage() {
-  const [tab, setTab] = useState<'private' | 'public'>('private');
+  const [filter, setFilter] = useState<VaultFilter>('all');
   const { memories } = useApp();
 
-  const filtered = tab === 'private'
-    ? memories.filter(m => m.visibility === 'private')
-    : memories.filter(m => m.visibility === 'public');
+  const filtered = memories.filter(m => {
+    if (filter === 'private') return m.visibility === 'private';
+    if (filter === 'public') return m.visibility === 'public';
+    return true;
+  });
 
   return (
     <div className="min-h-screen bg-background pb-24">
-      <div className="px-5 pt-14 pb-4">
-        <h1 className="text-2xl font-display text-foreground">Your Vault</h1>
-      </div>
-
-      {/* Toggle */}
-      <div className="px-5 mb-4">
-        <div className="flex bg-muted rounded-xl p-1">
-          <button
-            onClick={() => setTab('private')}
-            className={`flex-1 py-2 rounded-lg text-xs font-medium flex items-center justify-center gap-1.5 transition-all ${tab === 'private' ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground'}`}
-          >
-            <Lock size={12} /> Private
-          </button>
-          <button
-            onClick={() => setTab('public')}
-            className={`flex-1 py-2 rounded-lg text-xs font-medium flex items-center justify-center gap-1.5 transition-all ${tab === 'public' ? 'bg-card shadow-sm text-foreground' : 'text-muted-foreground'}`}
-          >
-            <Globe size={12} /> Public
-          </button>
+      {/* Empty state */}
+      {memories.length === 0 ? (
+        <div className="flex flex-col items-center justify-center min-h-[70vh] px-10 text-center">
+          <ImageIcon size={48} className="text-muted-foreground mb-5" />
+          <h2 className="text-base font-semibold text-foreground mb-2">No memories yet</h2>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Capture moments during your routes{'\n'}to fill your vault
+          </p>
         </div>
-      </div>
-
-      {/* Memories */}
-      <div className="px-5 space-y-3">
-        {filtered.length === 0 && (
-          <div className="text-center py-16">
-            <p className="text-muted-foreground text-sm">No memories yet</p>
-            <p className="text-muted-foreground text-xs mt-1">Start a route to capture your first!</p>
+      ) : (
+        <div className="pt-14 pb-4">
+          {/* Header */}
+          <div className="px-5 mb-4">
+            <h1 className="text-2xl font-display text-foreground">Memory Vault</h1>
+            <p className="text-sm text-muted-foreground">{memories.length} moments captured</p>
           </div>
-        )}
-        {filtered.map((m, i) => (
-          <motion.div
-            key={m.id}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.05 }}
-            className="ios-card p-4"
-          >
-            <div className="w-full h-32 rounded-xl bg-muted mb-3 flex items-center justify-center">
-              <MapPin className="text-muted-foreground" size={24} />
-            </div>
-            <p className="text-sm text-foreground">{m.caption}</p>
-            <div className="flex items-center justify-between mt-2">
-              <span className="text-[11px] text-muted-foreground">📍 {m.spotName || 'Unknown'}</span>
-              {tab === 'public' && (
-                <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
-                  <Heart size={10} /> {m.likes}
-                </span>
-              )}
-            </div>
-          </motion.div>
-        ))}
-      </div>
+
+          {/* Filter pills */}
+          <div className="flex gap-2 px-5 mb-5">
+            {(['all', 'private', 'public'] as VaultFilter[]).map(f => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`px-3.5 py-2 rounded-full text-xs font-medium capitalize transition-all ${
+                  filter === f
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-muted text-muted-foreground'
+                }`}
+              >
+                {f === 'all' ? 'All' : f === 'private' ? 'Private' : 'Public'}
+              </button>
+            ))}
+          </div>
+
+          {/* Memory grid */}
+          <div className="px-5 grid grid-cols-2 gap-3">
+            {filtered.map((m, i) => (
+              <motion.div
+                key={m.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.05 }}
+                className="ios-card p-2 overflow-hidden"
+              >
+                {/* Image */}
+                <div className="relative w-full h-28 rounded-xl bg-muted flex items-center justify-center mb-2 overflow-hidden">
+                  {m.mediaUrl ? (
+                    <img src={m.mediaUrl} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    <ImageIcon size={24} className="text-muted-foreground" />
+                  )}
+                  {/* Privacy badge */}
+                  <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-background/60 backdrop-blur-sm flex items-center justify-center">
+                    {m.visibility === 'public' ? (
+                      <Globe size={10} className="text-foreground" />
+                    ) : (
+                      <Lock size={10} className="text-foreground" />
+                    )}
+                  </div>
+                </div>
+
+                <p className="text-xs text-muted-foreground line-clamp-2 px-1">
+                  {m.caption || 'A moment remembered'}
+                </p>
+                <p className="text-[10px] text-muted-foreground/60 mt-1 px-1">
+                  {new Date(m.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <BottomTabBar />
     </div>
