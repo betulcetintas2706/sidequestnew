@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ChevronLeft, Clock, MapPin, Sparkles, Play, Settings, Bookmark } from 'lucide-react';
+import { ChevronLeft, Clock, Sparkles, Play, Settings, Bookmark } from 'lucide-react';
+import GoogleMapComponent from '@/components/GoogleMapView';
 import { useApp } from '@/context/AppContext';
 import { seedSpots } from '@/data/seedData';
 import { Route } from '@/types';
@@ -39,14 +40,14 @@ export default function RoutePreviewPage() {
   return (
     <div className="min-h-screen bg-background pb-10">
       {/* Map placeholder */}
-      <div className="relative h-56 bg-secondary/20">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="flex flex-col items-center gap-2 text-secondary">
-            <MapPin size={32} />
-            <span className="text-xs font-medium">Map Preview</span>
-          </div>
-        </div>
-        <button onClick={() => navigate('/shape-adventure')} className="absolute top-12 left-4 w-9 h-9 rounded-full bg-card/90 backdrop-blur flex items-center justify-center shadow-ios">
+      <div className="relative h-56">
+        <GoogleMapComponent
+          stops={route.stops}
+          showRoute
+          isInteractive={false}
+          className="h-full w-full"
+        />
+        <button onClick={() => navigate('/shape-adventure')} className="absolute top-12 left-4 z-10 w-9 h-9 rounded-full bg-card/90 backdrop-blur flex items-center justify-center shadow-ios">
           <ChevronLeft size={20} className="text-foreground" />
         </button>
       </div>
