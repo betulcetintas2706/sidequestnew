@@ -1,82 +1,102 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Target, Zap, Star } from 'lucide-react';
-import { seedChallenges } from '@/data/seedData';
+import { Flame, Compass, UtensilsCrossed, TreePine, Palette, Users, Sparkles, Target, Star } from 'lucide-react';
 import BottomTabBar from '@/components/BottomTabBar';
+import { NavigatorMode } from '@/types';
 
-const difficultyColors: Record<string, string> = {
-  easy: 'bg-secondary/15 text-secondary',
-  medium: 'bg-accent/15 text-accent',
-  hard: 'bg-primary/15 text-primary',
+interface Challenge {
+  id: string;
+  title: string;
+  description: string;
+  pointsReward: number;
+  category: NavigatorMode;
+}
+
+const challenges: Challenge[] = [
+  { id: 'ch1', title: 'First Steps', description: 'Complete your first discovery route', pointsReward: 50, category: 'adventure' },
+  { id: 'ch2', title: 'Memory Keeper', description: 'Capture 5 memories during routes', pointsReward: 75, category: 'culture' },
+  { id: 'ch3', title: 'Local Foodie', description: 'Visit 3 cafes or restaurants on foodie routes', pointsReward: 100, category: 'foodie' },
+  { id: 'ch4', title: 'Nature Walker', description: 'Complete a nature route with all stops', pointsReward: 100, category: 'nature' },
+  { id: 'ch5', title: 'Social Butterfly', description: 'Share 3 memories publicly', pointsReward: 75, category: 'social' },
+  { id: 'ch6', title: 'Mystery Solver', description: 'Complete 2 mystery mode routes', pointsReward: 150, category: 'mystery' },
+  { id: 'ch7', title: 'Bold Explorer', description: 'Complete a route with Bold detour level', pointsReward: 125, category: 'adventure' },
+  { id: 'ch8', title: 'Week Warrior', description: 'Maintain a 7-day exploration streak', pointsReward: 200, category: 'adventure' },
+];
+
+const categoryConfig: Record<NavigatorMode, { icon: typeof Compass; color: string; bgColor: string }> = {
+  adventure: { icon: Compass, color: 'text-primary', bgColor: 'bg-primary/15' },
+  foodie: { icon: UtensilsCrossed, color: 'text-accent', bgColor: 'bg-accent/15' },
+  nature: { icon: TreePine, color: 'text-secondary', bgColor: 'bg-secondary/15' },
+  culture: { icon: Palette, color: 'text-primary', bgColor: 'bg-primary/15' },
+  social: { icon: Users, color: 'text-accent', bgColor: 'bg-accent/15' },
+  mystery: { icon: Sparkles, color: 'text-secondary', bgColor: 'bg-secondary/15' },
 };
+
+function PointsBadge({ points }: { points: number }) {
+  return (
+    <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-accent/15 text-accent text-xs font-semibold">
+      <Star size={12} /> {points}
+    </span>
+  );
+}
 
 export default function ChallengesPage() {
   const navigate = useNavigate();
-  const active = seedChallenges.filter(c => c.active);
-  const featured = active[0];
 
   return (
     <div className="min-h-screen bg-background pb-24">
-      <div className="px-5 pt-14 pb-4">
+      <div className="px-5 pt-14 pb-2">
+        {/* Header */}
         <h1 className="text-2xl font-display text-foreground">Challenges</h1>
-        <p className="text-sm text-muted-foreground mt-1">Find hidden gems in your city</p>
+        <p className="text-sm text-muted-foreground mt-1">Earn points and badges by exploring</p>
       </div>
 
-      {/* Featured */}
-      {featured && (
-        <div className="px-5 mb-6">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            onClick={() => navigate('/challenge/' + featured.id)}
-            className="ios-card p-5 shadow-ios-lg cursor-pointer relative overflow-hidden"
-          >
-            <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-            <div className="flex items-center gap-2 mb-2">
-              <Zap className="text-accent" size={16} />
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-accent">Featured</span>
+      <div className="px-5 mt-5 mb-5">
+        {/* Daily challenge highlight */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="ios-card p-4 shadow-ios-lg"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
+              <Flame className="text-accent" size={22} />
             </div>
-            <h3 className="text-lg font-display text-foreground mb-1">{featured.title}</h3>
-            <p className="text-xs text-muted-foreground mb-3 leading-relaxed">{featured.description}</p>
-            <div className="flex items-center gap-3">
-              <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold capitalize ${difficultyColors[featured.difficulty]}`}>
-                {featured.difficulty}
-              </span>
-              <span className="flex items-center gap-1 text-xs text-accent">
-                <Star size={12} /> {featured.rewardPoints} pts
-              </span>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-accent">Daily Challenge</p>
+              <p className="text-xs text-muted-foreground mt-0.5">Explore a new neighborhood today</p>
             </div>
-          </motion.div>
-        </div>
-      )}
+            <PointsBadge points={50} />
+          </div>
+        </motion.div>
+      </div>
 
-      {/* Other challenges */}
+      {/* All Challenges */}
       <div className="px-5">
-        <h3 className="text-sm font-semibold text-foreground mb-3">Nearby</h3>
-        <div className="space-y-3">
-          {active.slice(1).map((c, i) => (
-            <motion.div
-              key={c.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.05 }}
-              onClick={() => navigate('/challenge/' + c.id)}
-              className="ios-card p-4 flex items-center gap-3 cursor-pointer"
-            >
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                <Target className="text-primary" size={20} />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-medium text-foreground">{c.title}</p>
-                <div className="flex items-center gap-2 mt-0.5">
-                  <span className={`px-1.5 py-0.5 rounded text-[9px] font-semibold capitalize ${difficultyColors[c.difficulty]}`}>
-                    {c.difficulty}
-                  </span>
-                  <span className="text-[11px] text-accent">{c.rewardPoints} pts</span>
+        <h3 className="text-sm font-semibold text-foreground mb-3">All Challenges</h3>
+        <div className="space-y-2">
+          {challenges.map((c, i) => {
+            const config = categoryConfig[c.category];
+            const Icon = config.icon;
+            return (
+              <motion.div
+                key={c.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.04 }}
+                className="ios-card p-3 flex items-center gap-3"
+              >
+                <div className={`w-11 h-11 rounded-xl ${config.bgColor} flex items-center justify-center flex-shrink-0`}>
+                  <Icon className={config.color} size={18} />
                 </div>
-              </div>
-            </motion.div>
-          ))}
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-foreground">{c.title}</p>
+                  <p className="text-[11px] text-muted-foreground truncate">{c.description}</p>
+                </div>
+                <PointsBadge points={c.pointsReward} />
+              </motion.div>
+            );
+          })}
         </div>
       </div>
 
