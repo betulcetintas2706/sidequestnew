@@ -46,7 +46,7 @@ export default function RoutePreviewPage() {
             <span className="text-xs font-medium">Map Preview</span>
           </div>
         </div>
-        <button onClick={() => navigate('/route-setup')} className="absolute top-12 left-4 w-9 h-9 rounded-full bg-card/90 backdrop-blur flex items-center justify-center shadow-ios">
+        <button onClick={() => navigate('/shape-adventure')} className="absolute top-12 left-4 w-9 h-9 rounded-full bg-card/90 backdrop-blur flex items-center justify-center shadow-ios">
           <ChevronLeft size={20} className="text-foreground" />
         </button>
       </div>
@@ -104,7 +104,7 @@ export default function RoutePreviewPage() {
           <Play size={18} /> Start Route
         </button>
         <div className="flex gap-3">
-          <button onClick={() => navigate('/route-setup')} className="flex-1 py-3 rounded-2xl bg-muted text-foreground font-medium text-sm flex items-center justify-center gap-2">
+          <button onClick={() => navigate('/shape-adventure')} className="flex-1 py-3 rounded-2xl bg-muted text-foreground font-medium text-sm flex items-center justify-center gap-2">
             <Settings size={16} /> Customize
           </button>
           <button className="flex-1 py-3 rounded-2xl bg-muted text-foreground font-medium text-sm flex items-center justify-center gap-2">
