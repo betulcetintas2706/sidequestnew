@@ -183,10 +183,6 @@ export default function RoutePreviewPage() {
           >
             <MysteryOverlayContent
               onDismiss={() => setShowMystery(false)}
-              onStart={() => {
-                setShowMystery(false);
-                navigate('/shape-adventure');
-              }}
             />
           </motion.div>
         )}
@@ -201,7 +197,7 @@ const mysteryClues = [
   "Trust the journey. The city knows where to take you.",
 ];
 
-function MysteryOverlayContent({ onDismiss, onStart }: { onDismiss: () => void; onStart: () => void }) {
+function MysteryOverlayContent({ onDismiss }: { onDismiss: () => void }) {
   const [revealLevel, setRevealLevel] = useState(0);
 
   return (
@@ -254,7 +250,7 @@ function MysteryOverlayContent({ onDismiss, onStart }: { onDismiss: () => void; 
       )}
 
       <button
-        onClick={onStart}
+        onClick={onDismiss}
         className="w-full py-3.5 rounded-2xl bg-secondary text-primary-foreground font-semibold text-sm"
       >
         Enter the Unknown
