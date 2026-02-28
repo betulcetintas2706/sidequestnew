@@ -1,77 +1,135 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Trophy, Flame, Map, Award, ChevronRight, Settings, BarChart3 } from 'lucide-react';
+import { Star, Map, Camera, Flame, Wallet, Medal, Bell, Volume2, MapIcon, HelpCircle, ChevronRight, User } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import BottomTabBar from '@/components/BottomTabBar';
 
 export default function ProfilePage() {
-  const { user, badges } = useApp();
+  const { user, badges, memories } = useApp();
   const navigate = useNavigate();
-  const unlockedCount = badges.filter(b => b.unlocked).length;
+  const unlockedBadges = badges.filter(b => b.unlocked);
+  const questBalance = (user.routesCompleted * 1.5).toFixed(1);
 
   return (
     <div className="min-h-screen bg-background pb-24">
-      <div className="px-5 pt-14 pb-6">
-        {/* Avatar + Name */}
-        <div className="flex items-center gap-4 mb-6">
-          <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-2xl font-display text-primary">
-            {user.name[0]}
-          </div>
-          <div>
-            <h1 className="text-xl font-display text-foreground">{user.name}</h1>
-            <p className="text-xs text-muted-foreground capitalize">{user.authProvider} account</p>
-          </div>
-        </div>
+      <div className="pt-14 pb-6 flex flex-col items-center">
+        {/* Avatar */}
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="w-22 h-22 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-3 shadow-ios-lg"
+          style={{ width: 88, height: 88 }}
+        >
+          <User className="text-primary-foreground" size={36} />
+        </motion.div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-3 mb-6">
+        <h1 className="text-2xl font-display text-foreground">{user.name}</h1>
+
+        {/* Streak badge */}
+        {user.streak > 0 && (
+          <div className="flex items-center gap-1.5 mt-2 px-3 py-1.5 rounded-full bg-primary/15">
+            <Flame size={14} className="text-primary" />
+            <span className="text-xs font-medium text-primary">{user.streak} day streak</span>
+          </div>
+        )}
+      </div>
+
+      {/* Stats grid */}
+      <div className="px-5 mb-6">
+        <div className="flex gap-3">
           {[
-            { icon: Trophy, value: user.points, label: 'Points', color: 'text-accent' },
-            { icon: Flame, value: user.streak, label: 'Streak', color: 'text-primary' },
-            { icon: Map, value: user.routesCompleted, label: 'Routes', color: 'text-secondary' },
-          ].map(({ icon: Icon, value, label, color }) => (
-            <div key={label} className="ios-card p-3 text-center">
-              <Icon className={`mx-auto ${color}`} size={20} />
-              <p className="text-lg font-semibold text-foreground mt-1">{value}</p>
+            { icon: Star, value: user.points, label: 'Points', color: 'text-accent', bg: 'bg-accent/15' },
+            { icon: Map, value: user.routesCompleted, label: 'Routes', color: 'text-secondary', bg: 'bg-secondary/15' },
+            { icon: Camera, value: memories.length, label: 'Memories', color: 'text-primary', bg: 'bg-primary/15' },
+          ].map(({ icon: Icon, value, label, color, bg }) => (
+            <div key={label} className="ios-card flex-1 p-3 text-center">
+              <div className={`w-9 h-9 rounded-xl ${bg} flex items-center justify-center mx-auto mb-1.5`}>
+                <Icon className={color} size={18} />
+              </div>
+              <p className="text-lg font-semibold text-foreground">{value}</p>
               <p className="text-[10px] text-muted-foreground">{label}</p>
             </div>
           ))}
         </div>
+      </div>
 
-        {/* Badges preview */}
-        <div className="ios-card p-4 mb-4">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-semibold text-foreground">Badges</h3>
-            <button onClick={() => navigate('/badges')} className="text-xs text-primary font-medium flex items-center gap-0.5">
-              View all <ChevronRight size={14} />
-            </button>
+      {/* Wallet section */}
+      <div className="px-5 mb-6">
+        <div className="ios-card p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Wallet size={18} className="text-secondary" />
+            <span className="text-sm font-semibold text-foreground">Solana Wallet</span>
           </div>
-          <div className="flex gap-3">
-            {badges.slice(0, 4).map(b => (
-              <div key={b.id} className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl ${b.unlocked ? 'bg-accent/15' : 'bg-muted opacity-40'}`}>
-                {b.icon}
-              </div>
-            ))}
-            <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center text-xs text-muted-foreground font-semibold">
-              +{Math.max(0, badges.length - 4)}
+
+          {user.walletAddress ? (
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm font-mono text-muted-foreground">
+                {user.walletAddress.slice(0, 8)}...{user.walletAddress.slice(-4)}
+              </span>
+            </div>
+          ) : (
+            <button className="w-full py-2.5 rounded-xl bg-secondary/15 text-secondary text-sm font-medium mb-3">
+              Connect Wallet
+            </button>
+          )}
+
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[10px] text-muted-foreground">$QUEST Balance</p>
+              <p className="text-xl font-semibold text-secondary">{questBalance}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-[10px] text-muted-foreground">cNFT Badges</p>
+              <p className="text-xl font-semibold text-accent">{unlockedBadges.length}</p>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Menu items */}
-        <div className="space-y-2">
+      {/* Badges section */}
+      <div className="mb-6">
+        <h3 className="text-sm font-semibold text-foreground px-5 mb-3">Badges</h3>
+        {unlockedBadges.length === 0 ? (
+          <div className="px-5">
+            <div className="ios-card p-4 flex items-center gap-3">
+              <Medal size={24} className="text-muted-foreground" />
+              <div>
+                <p className="text-sm text-muted-foreground">No badges yet</p>
+                <p className="text-[11px] text-muted-foreground">Complete routes and challenges to earn badges</p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="flex gap-3 overflow-x-auto px-5 pb-2 scrollbar-hide">
+            {unlockedBadges.map(b => (
+              <div key={b.id} className="flex flex-col items-center gap-1.5 flex-shrink-0" style={{ width: 72 }}>
+                <div className="w-14 h-14 rounded-full bg-accent/15 flex items-center justify-center text-2xl">
+                  {b.icon}
+                </div>
+                <span className="text-[10px] text-muted-foreground text-center truncate w-full">{b.name}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Settings shortcuts */}
+      <div className="px-5">
+        <div className="ios-card overflow-hidden">
           {[
-            { icon: BarChart3, label: 'Leaderboards', path: '/leaderboards' },
-            { icon: Settings, label: 'Settings', path: '/settings' },
-          ].map(({ icon: Icon, label, path }) => (
+            { icon: Bell, label: 'Notifications', color: 'text-primary', path: '/settings' },
+            { icon: Volume2, label: 'Voice Guide', color: 'text-secondary', path: '/settings' },
+            { icon: MapIcon, label: 'Map Style', color: 'text-primary', path: '/settings' },
+            { icon: HelpCircle, label: 'Help & Feedback', color: 'text-accent', path: '/settings' },
+          ].map(({ icon: Icon, label, color, path }, i) => (
             <button
-              key={path}
+              key={label}
               onClick={() => navigate(path)}
-              className="w-full ios-card p-4 flex items-center gap-3"
+              className={`w-full flex items-center gap-3 px-4 py-3.5 ${i > 0 ? 'border-t border-border/50' : ''}`}
             >
-              <Icon className="text-muted-foreground" size={18} />
+              <Icon size={16} className={color} />
               <span className="flex-1 text-sm text-foreground text-left">{label}</span>
-              <ChevronRight className="text-muted-foreground" size={16} />
+              <ChevronRight size={12} className="text-muted-foreground" />
             </button>
           ))}
         </div>
