@@ -1,124 +1,120 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Compass, Flame, Trophy, ChevronRight, MapPin, Target } from 'lucide-react';
+import { Star, Flame, Map, Compass } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+import { NavigatorMode } from '@/types';
 import BottomTabBar from '@/components/BottomTabBar';
 
+const modes: { id: NavigatorMode; emoji: string; label: string; tagline: string }[] = [
+  { id: 'adventure', emoji: '🧭', label: 'Adventure', tagline: 'Urban exploration, rooftops & hidden passages' },
+  { id: 'foodie', emoji: '🍜', label: 'Foodie', tagline: 'Cafés, street food & hole-in-the-wall gems' },
+  { id: 'nature', emoji: '🌿', label: 'Nature', tagline: 'Parks, trails, gardens & waterways' },
+  { id: 'culture', emoji: '🎭', label: 'Culture', tagline: 'Murals, galleries & historic landmarks' },
+  { id: 'social', emoji: '🤝', label: 'Social', tagline: 'Markets, community spaces & live music' },
+  { id: 'mystery', emoji: '🔮', label: 'Mystery', tagline: 'Random surprises — no spoilers' },
+];
+
+const modeColors: Record<NavigatorMode, string> = {
+  adventure: 'text-primary',
+  foodie: 'text-accent',
+  nature: 'text-secondary',
+  culture: 'text-primary',
+  social: 'text-accent',
+  mystery: 'text-secondary',
+};
+
 export default function HomePage() {
-  const { user } = useApp();
+  const { user, routeConfig, setRouteConfig, isMysteryMode, setIsMysteryMode } = useApp();
   const navigate = useNavigate();
+
+  const selectedMode = routeConfig.mode || 'adventure';
+  const currentModeData = modes.find(m => m.id === selectedMode)!;
+
+  const handleModeSelect = (mode: NavigatorMode) => {
+    setRouteConfig({ mode });
+    setIsMysteryMode(mode === 'mystery');
+  };
+
+  const handleStartRoute = () => {
+    if (isMysteryMode) {
+      navigate('/route-preview');
+    } else {
+      navigate('/shape-adventure');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background pb-24">
       {/* Header */}
-      <div className="px-5 pt-14 pb-4">
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-          <p className="text-muted-foreground text-sm">Good to see you,</p>
-          <h1 className="text-2xl font-display text-foreground">{user.name}</h1>
-        </motion.div>
+      <div className="px-5 pt-14 pb-2">
+        <motion.h1
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-3xl font-display bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
+        >
+          SideQuest
+        </motion.h1>
+        <p className="text-sm text-muted-foreground mt-1">What will you discover today?</p>
       </div>
 
-      {/* Stats row */}
-      <div className="px-5 mb-6">
+      {/* Stats */}
+      <div className="px-5 mt-5 mb-6">
         <div className="flex gap-3">
-          <div className="ios-card flex-1 p-4 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center">
-              <Trophy className="text-accent" size={20} />
+          {[
+            { icon: Star, value: user.points, label: 'Points', color: 'text-accent', bg: 'bg-accent/15' },
+            { icon: Flame, value: `${user.streak}d`, label: 'Streak', color: 'text-primary', bg: 'bg-primary/15' },
+            { icon: Map, value: user.routesCompleted, label: 'Routes', color: 'text-secondary', bg: 'bg-secondary/15' },
+          ].map(({ icon: Icon, value, label, color, bg }) => (
+            <div key={label} className="ios-card flex-1 p-3 text-center">
+              <div className={`w-9 h-9 rounded-xl ${bg} flex items-center justify-center mx-auto mb-1.5`}>
+                <Icon className={color} size={18} />
+              </div>
+              <p className="text-lg font-semibold text-foreground">{value}</p>
+              <p className="text-[10px] text-muted-foreground">{label}</p>
             </div>
-            <div>
-              <p className="text-lg font-semibold text-foreground">{user.points}</p>
-              <p className="text-[11px] text-muted-foreground">Points</p>
-            </div>
-          </div>
-          <div className="ios-card flex-1 p-4 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Flame className="text-primary" size={20} />
-            </div>
-            <div>
-              <p className="text-lg font-semibold text-foreground">{user.streak}</p>
-              <p className="text-[11px] text-muted-foreground">Day Streak</p>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
 
-      {/* Main CTA */}
-      <div className="px-5 mb-6">
+      {/* Mode selection */}
+      <div className="mb-6">
+        <h3 className="text-sm font-semibold text-foreground px-5 mb-3">Choose your vibe</h3>
+        <div className="flex gap-3 overflow-x-auto px-5 pb-2 scrollbar-hide">
+          {modes.map(mode => (
+            <button
+              key={mode.id}
+              onClick={() => handleModeSelect(mode.id)}
+              className={`flex-shrink-0 px-4 py-2.5 rounded-2xl text-sm font-medium flex items-center gap-2 transition-all ${
+                selectedMode === mode.id
+                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  : 'ios-card text-foreground'
+              }`}
+            >
+              <span>{mode.emoji}</span>
+              {mode.label}
+            </button>
+          ))}
+        </div>
+        <p className={`text-xs px-5 mt-2 ${modeColors[selectedMode]} transition-colors`}>
+          {currentModeData.tagline}
+        </p>
+      </div>
+
+      {/* Actions */}
+      <div className="px-5 space-y-3">
         <motion.button
           whileTap={{ scale: 0.98 }}
-          onClick={() => navigate('/shape-adventure')}
-          className="w-full ios-card p-5 flex items-center gap-4 shadow-ios-lg"
+          onClick={handleStartRoute}
+          className="w-full py-4 rounded-2xl bg-primary text-primary-foreground font-semibold text-base flex items-center justify-center gap-2 shadow-ios-lg"
         >
-          <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center shadow-ios">
-            <Compass className="text-primary-foreground" size={28} />
-          </div>
-          <div className="flex-1 text-left">
-            <p className="font-semibold text-foreground">Start a Route</p>
-            <p className="text-xs text-muted-foreground mt-0.5">Choose a mode and explore</p>
-          </div>
-          <ChevronRight className="text-muted-foreground" size={20} />
+          <Compass size={18} /> Start a Route
         </motion.button>
-      </div>
-
-      {/* Quick actions */}
-      <div className="px-5 mb-6">
-        <div className="flex gap-3">
-          <motion.button
-            whileTap={{ scale: 0.97 }}
-            onClick={() => navigate('/challenges')}
-            className="ios-card flex-1 p-4 flex flex-col items-center gap-2"
-          >
-            <Target className="text-secondary" size={24} />
-            <span className="text-xs font-medium text-foreground">Find It</span>
-          </motion.button>
-          <motion.button
-            whileTap={{ scale: 0.97 }}
-            onClick={() => navigate('/explore')}
-            className="ios-card flex-1 p-4 flex flex-col items-center gap-2"
-          >
-            <MapPin className="text-primary" size={24} />
-            <span className="text-xs font-medium text-foreground">Explore Nearby</span>
-          </motion.button>
-        </div>
-      </div>
-
-      {/* Trending section */}
-      <div className="px-5 mb-6">
-        <h3 className="text-sm font-semibold text-foreground mb-3">Trending near you</h3>
-        <div className="flex gap-3 overflow-x-auto pb-2 -mx-5 px-5 scrollbar-hide">
-          {['Hidden Mural Alley', 'Rooftop Garden Café', 'Sunset Overlook'].map((name, i) => (
-            <motion.div
-              key={name}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 + i * 0.1 }}
-              className="ios-card min-w-[160px] p-3 flex-shrink-0"
-            >
-              <div className="w-full h-20 rounded-xl bg-muted mb-2 flex items-center justify-center">
-                <MapPin className="text-muted-foreground" size={20} />
-              </div>
-              <p className="text-xs font-medium text-foreground truncate">{name}</p>
-              <p className="text-[10px] text-muted-foreground mt-0.5">📍 0.{i + 2} mi away</p>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-
-      {/* Weekly leaderboard preview */}
-      <div className="px-5">
-        <h3 className="text-sm font-semibold text-foreground mb-3">Weekly Leaderboard</h3>
-        <div className="ios-card p-4">
-          {['@adventurer_sam', '@urban_wanderer', '@nature_nina'].map((name, i) => (
-            <div key={name} className={`flex items-center gap-3 ${i > 0 ? 'mt-3 pt-3 border-t border-border' : ''}`}>
-              <span className="text-sm font-semibold text-accent w-5">{i + 1}</span>
-              <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-xs">
-                {name[1].toUpperCase()}
-              </div>
-              <span className="flex-1 text-sm text-foreground">{name}</span>
-              <span className="text-xs text-muted-foreground">{[320, 285, 240][i]} pts</span>
-            </div>
-          ))}
-        </div>
+        <button
+          onClick={() => navigate('/explore')}
+          className="w-full py-3.5 rounded-2xl bg-muted text-foreground font-medium text-sm"
+        >
+          Explore Nearby
+        </button>
       </div>
 
       <BottomTabBar />
