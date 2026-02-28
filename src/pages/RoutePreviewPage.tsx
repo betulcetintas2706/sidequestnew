@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Clock, Sparkles, Play, ChevronRight, Loader2, Quote } from 'lucide-react';
+import { Clock, Sparkles, Play, ChevronRight, Loader2, Quote, Eye } from 'lucide-react';
 import GoogleMapComponent from '@/components/GoogleMapView';
 import { useApp } from '@/context/AppContext';
 import { seedSpots } from '@/data/seedData';
@@ -181,31 +181,84 @@ export default function RoutePreviewPage() {
             className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-8"
             onClick={() => setShowMystery(false)}
           >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="ios-card p-8 text-center max-w-sm"
-              onClick={e => e.stopPropagation()}
-            >
-              <span className="text-5xl mb-4 block">🔮</span>
-              <h2 className="text-lg font-display text-foreground mb-2">Mystery Mode</h2>
-              <p className="text-sm text-muted-foreground mb-6">
-                Let the unknown guide you. Your stops will be revealed one at a time as you explore.
-              </p>
-              <button
-                onClick={() => {
-                  setShowMystery(false);
-                  navigate('/shape-adventure');
-                }}
-                className="w-full py-3.5 rounded-2xl bg-primary text-primary-foreground font-semibold text-sm"
-              >
-                Embrace the Mystery
-              </button>
-            </motion.div>
+            <MysteryOverlayContent
+              onDismiss={() => setShowMystery(false)}
+              onStart={() => {
+                setShowMystery(false);
+                navigate('/shape-adventure');
+              }}
+            />
           </motion.div>
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+const mysteryClues = [
+  "The route reveals itself one step at a time...",
+  "Each stop hides behind a riddle.",
+  "Trust the journey. The city knows where to take you.",
+];
+
+function MysteryOverlayContent({ onDismiss, onStart }: { onDismiss: () => void; onStart: () => void }) {
+  const [revealLevel, setRevealLevel] = useState(0);
+
+  return (
+    <motion.div
+      initial={{ scale: 0.9, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      exit={{ scale: 0.9, opacity: 0 }}
+      className="ios-card p-8 text-center max-w-sm"
+      onClick={e => e.stopPropagation()}
+    >
+      {/* Pulsing icon */}
+      <div className="relative mx-auto mb-4 w-24 h-24">
+        <motion.div
+          animate={{ scale: [1, 1.1, 1] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute inset-0 rounded-full bg-secondary/20"
+        />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Sparkles size={48} className="text-secondary" />
+        </div>
+      </div>
+
+      <h2 className="text-lg font-display text-foreground mb-4">Mystery Mode</h2>
+
+      {/* Progressive clue reveal */}
+      <div className="space-y-3 mb-5">
+        <AnimatePresence>
+          {mysteryClues.map((clue, i) =>
+            i <= revealLevel ? (
+              <motion.p
+                key={i}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`text-sm text-muted-foreground ${i === revealLevel ? 'blur-[0.5px]' : ''}`}
+              >
+                {clue}
+              </motion.p>
+            ) : null
+          )}
+        </AnimatePresence>
+      </div>
+
+      {revealLevel < mysteryClues.length - 1 && (
+        <button
+          onClick={() => setRevealLevel(prev => prev + 1)}
+          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-secondary/15 text-secondary text-xs font-medium mb-4"
+        >
+          <Eye size={14} /> Reveal more
+        </button>
+      )}
+
+      <button
+        onClick={onStart}
+        className="w-full py-3.5 rounded-2xl bg-secondary text-primary-foreground font-semibold text-sm"
+      >
+        Enter the Unknown
+      </button>
+    </motion.div>
   );
 }
