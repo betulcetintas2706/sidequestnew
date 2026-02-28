@@ -28,8 +28,9 @@ export default function OnboardingPage() {
   const navigate = useNavigate();
   const { completeOnboarding, setUser } = useApp();
 
-  const isLast = currentPage === pages.length - 1;
-  const current = pages[currentPage];
+  const safeIndex = Math.min(currentPage, pages.length - 1);
+  const isLast = safeIndex === pages.length - 1;
+  const current = pages[safeIndex];
   const Icon = current.icon;
 
   const handleNext = () => {
