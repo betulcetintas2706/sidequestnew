@@ -131,23 +131,19 @@ export default function RoutePreviewPage() {
             <div className="space-y-0">
               {route.stops.map((stop, i) => (
                 <div key={stop.id}>
-                  <motion.button
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.08 }}
-                    onClick={() => navigate('/stop/' + stop.id)}
-                    className="flex items-center gap-3 w-full py-3 text-left"
-                  >
-                    <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center text-xs font-semibold text-primary flex-shrink-0">
+                  <div className="flex items-center gap-3 py-3">
+                    <div className="w-9 h-9 rounded-full bg-muted flex items-center justify-center text-xs font-semibold text-muted-foreground flex-shrink-0">
                       {i + 1}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-foreground truncate">{stop.name}</p>
-                      <p className="text-[11px] text-muted-foreground">{stop.category}</p>
+                      <p className="text-[11px] text-muted-foreground truncate">{stop.shortDescription}</p>
                     </div>
-                    <ChevronRight size={14} className="text-muted-foreground flex-shrink-0" />
-                  </motion.button>
-                  {i < route.stops.length - 1 && <div className="border-t border-border/30 ml-10" />}
+                    <span className="text-[10px] font-medium text-primary bg-primary/15 px-2 py-1 rounded-full flex-shrink-0">
+                      {stop.category}
+                    </span>
+                  </div>
+                  {i < route.stops.length - 1 && <div className="border-t border-border/30 ml-12" />}
                 </div>
               ))}
             </div>
