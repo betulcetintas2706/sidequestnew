@@ -121,4 +121,32 @@
   .gold-shimmer {
     background: linear-gradient(135deg, hsl(30 52% 64%), hsl(30 60% 72%), hsl(30 52% 64%));
   }
+
+  /* Organic texture overlay */
+  .grain {
+    position: relative;
+  }
+  .grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.03;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 128px;
+    border-radius: inherit;
+  }
+
+  /* Editorial divider */
+  .editorial-rule {
+    width: 2rem;
+    height: 2px;
+    background: hsl(var(--terracotta));
+    border-radius: 1px;
+  }
+
+  /* Inset well — replaces generic card for secondary content */
+  .well {
+    @apply rounded-xl bg-muted/50 p-4;
+  }
 }
