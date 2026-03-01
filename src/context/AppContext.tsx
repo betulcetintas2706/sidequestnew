@@ -10,7 +10,6 @@ interface AppState {
   routeConfig: RouteConfig;
   isOnboarded: boolean;
   hasSeenHero: boolean;
-  isMysteryMode: boolean;
 }
 
 interface AppContextType extends AppState {
@@ -24,7 +23,6 @@ interface AppContextType extends AppState {
   dismissHero: () => void;
   unlockBadge: (id: string) => void;
   updateBadgeProgress: (id: string, progress: number) => void;
-  setIsMysteryMode: (v: boolean) => void;
 }
 
 const defaultUser: User = {
@@ -57,7 +55,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [routeConfig, setRouteConfigState] = useState<RouteConfig>(defaultRouteConfig);
   const [isOnboarded, setIsOnboarded] = useState(false);
   const [hasSeenHero, setHasSeenHero] = useState(false);
-  const [isMysteryMode, setIsMysteryMode] = useState(false);
 
   const addPoints = (pts: number) => setUser(prev => ({ ...prev, points: prev.points + pts }));
   const incrementStreak = () => setUser(prev => ({ ...prev, streak: prev.streak + 1 }));
@@ -75,9 +72,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   return (
     <AppContext.Provider value={{
-      user, badges, memories, currentRoute, routeConfig, isOnboarded, hasSeenHero, isMysteryMode,
+      user, badges, memories, currentRoute, routeConfig, isOnboarded, hasSeenHero,
       setUser, addPoints, incrementStreak, addMemory, setCurrentRoute, setRouteConfig,
-      completeOnboarding, dismissHero, unlockBadge, updateBadgeProgress, setIsMysteryMode,
+      completeOnboarding, dismissHero, unlockBadge, updateBadgeProgress,
     }}>
       {children}
     </AppContext.Provider>

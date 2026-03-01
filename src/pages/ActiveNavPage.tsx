@@ -1,20 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Camera, SkipForward, CheckCircle, X, Volume2 } from 'lucide-react';
+import { MapPin, Camera, SkipForward, CheckCircle, X, Volume2 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
-import GoogleMapComponent from '@/components/GoogleMapView';
+import MemoryCaptureSheet from '@/components/MemoryCaptureSheet';
+import RouteCompletionSheet from '@/components/RouteCompletionSheet';
 
 export default function ActiveNavPage() {
   const navigate = useNavigate();
-  const { currentRoute, addPoints } = useApp();
+  const { currentRoute, addPoints, incrementStreak, setCurrentRoute } = useApp();
   const [currentStopIdx, setCurrentStopIdx] = useState(0);
   const [checkedIn, setCheckedIn] = useState<Set<number>>(new Set());
-
-  // Convert index-based checked-in to ID-based for map
-  const checkedInIds = currentRoute
-    ? new Set(Array.from(checkedIn).map(i => currentRoute.stops[i]?.id).filter(Boolean))
-    : new Set<string>();
+  const [showMemorySheet, setShowMemorySheet] = useState(false);
+  const [showCompletionSheet, setShowCompletionSheet] = useState(false);
 
   if (!currentRoute) {
     navigate('/home');
@@ -31,34 +29,31 @@ export default function ActiveNavPage() {
 
   const handleSkip = () => {
     if (isLastStop) {
-      navigateToCompletion();
+      setShowCompletionSheet(true);
     } else {
       setCurrentStopIdx(prev => prev + 1);
     }
   };
 
-  const handleMemoryCapture = () => {
-    navigate(`/memory-capture?spotId=${currentStop.id}&spotName=${encodeURIComponent(currentStop.name)}`);
-  };
-
-  const navigateToCompletion = () => {
-    navigate(`/completion?points=${checkedIn.size * 25}&visited=${checkedIn.size}&total=${currentRoute.stops.length}`);
+  const handleEndRoute = () => {
+    incrementStreak();
+    setCurrentRoute(null);
+    navigate('/home');
   };
 
   return (
     <div className="min-h-screen bg-background relative">
       {/* Map area */}
-      <div className="h-[55vh] relative">
-        <GoogleMapComponent
-          stops={currentRoute.stops}
-          checkedInStops={checkedInIds}
-          currentStopIndex={currentStopIdx}
-          showRoute
-          className="h-full w-full"
-        />
+      <div className="h-[55vh] bg-secondary/15 relative">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-2 text-secondary">
+            <MapPin size={40} className="animate-pulse-soft" />
+            <span className="text-xs font-medium">Live Navigation</span>
+          </div>
+        </div>
 
         <button
-          onClick={navigateToCompletion}
+          onClick={() => setShowCompletionSheet(true)}
           className="absolute top-12 right-4 w-9 h-9 rounded-full bg-card/90 backdrop-blur flex items-center justify-center shadow-ios"
         >
           <X size={18} className="text-foreground" />
@@ -102,7 +97,7 @@ export default function ActiveNavPage() {
                 <CheckCircle size={16} /> {checkedIn.has(currentStopIdx) ? 'Checked In ✓' : 'Check In'}
               </button>
               <button
-                onClick={handleMemoryCapture}
+                onClick={() => setShowMemorySheet(true)}
                 className="py-3 px-4 rounded-xl bg-muted text-foreground text-sm font-medium flex items-center gap-2"
               >
                 <Camera size={16} />
@@ -117,6 +112,29 @@ export default function ActiveNavPage() {
           </motion.div>
         </AnimatePresence>
       </div>
+
+      {/* Memory capture sheet */}
+      <AnimatePresence>
+        {showMemorySheet && (
+          <MemoryCaptureSheet
+            spotId={currentStop.id}
+            spotName={currentStop.name}
+            onClose={() => setShowMemorySheet(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Route completion sheet */}
+      <AnimatePresence>
+        {showCompletionSheet && (
+          <RouteCompletionSheet
+            pointsEarned={checkedIn.size * 25}
+            stopsVisited={checkedIn.size}
+            totalStops={currentRoute.stops.length}
+            onDone={handleEndRoute}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
