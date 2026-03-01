@@ -46,10 +46,10 @@ export default function HomePage() {
 
         <div className="absolute bottom-0 left-0 right-0 px-5 pb-4">
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.5 }}>
-            <p className="text-[10px] text-muted-foreground tracking-widest uppercase">{getGreeting()}</p>
+            <p className="text-[10px] text-white/60 tracking-widest uppercase">{getGreeting()}</p>
             <div className="flex items-baseline gap-2 mt-0.5">
-              <h1 className="text-[1.5rem] font-display text-foreground leading-none">{user.name}</h1>
-              <span className="text-[10px] text-muted-foreground italic font-display">· explorer</span>
+              <h1 className="text-[1.5rem] font-display text-white leading-none">{user.name}</h1>
+              <span className="text-[10px] text-white/50 italic font-display">· explorer</span>
             </div>
           </motion.div>
 
@@ -57,24 +57,24 @@ export default function HomePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.25, duration: 0.5 }}
-            className="flex items-center gap-4 mt-2.5"
+            className="flex items-center gap-3 mt-2.5 bg-black/30 backdrop-blur-sm rounded-full px-3.5 py-2 w-fit"
           >
             <div className="flex items-center gap-1.5">
-              <Trophy size={13} className="text-accent" />
-              <span className="text-sm font-semibold text-foreground">{user.points}</span>
-              <span className="text-[10px] text-muted-foreground">pts</span>
+              <Trophy size={13} className="text-amber-300" />
+              <span className="text-sm font-semibold text-white">{user.points}</span>
+              <span className="text-[10px] text-white/60">pts</span>
             </div>
-            <div className="w-px h-3 bg-border/50" />
+            <div className="w-px h-3 bg-white/20" />
             <div className="flex items-center gap-1.5">
-              <Flame size={13} className="text-primary" />
-              <span className="text-sm font-semibold text-foreground">{user.streak}</span>
-              <span className="text-[10px] text-muted-foreground">day streak</span>
+              <Flame size={13} className="text-orange-300" />
+              <span className="text-sm font-semibold text-white">{user.streak}</span>
+              <span className="text-[10px] text-white/60">day streak</span>
             </div>
-            <div className="w-px h-3 bg-border/50" />
+            <div className="w-px h-3 bg-white/20" />
             <div className="flex items-center gap-1.5">
-              <Compass size={13} className="text-secondary" />
-              <span className="text-sm font-semibold text-foreground">{user.routesCompleted}</span>
-              <span className="text-[10px] text-muted-foreground">routes</span>
+              <Compass size={13} className="text-emerald-300" />
+              <span className="text-sm font-semibold text-white">{user.routesCompleted}</span>
+              <span className="text-[10px] text-white/60">routes</span>
             </div>
           </motion.div>
         </div>
