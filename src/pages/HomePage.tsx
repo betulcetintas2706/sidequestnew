@@ -167,17 +167,6 @@ export default function HomePage() {
           </div>
         </motion.div>
       </div>
-
-      {/* More to explore */}
-      <div className="px-4 columns-2 gap-2.5 space-y-2.5 mt-4">
-        {activeChallenges[1] && (
-          <ChallengeCard challenge={activeChallenges[1]} image={challengeImages[1]} aspect="aspect-square" delay={0.6} navigate={navigate} />
-        )}
-        {trendingSpots.slice(4).map((spot, i) => (
-          <SpotCard key={spot.id} spot={spot} aspect={i === 0 ? 'aspect-[3/4]' : 'aspect-square'} delay={0.63 + i * 0.05} navigate={navigate} />
-        ))}
-      </div>
-
       <BottomTabBar />
     </div>
   );
