@@ -30,8 +30,8 @@ export default function ModeSelectPage() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Hero header */}
-      <div className="relative h-[140px] overflow-hidden">
+      {/* Hero */}
+      <div className="relative h-[160px] overflow-hidden">
         <motion.img
           src={heroImg}
           alt=""
@@ -59,47 +59,42 @@ export default function ModeSelectPage() {
         </div>
       </div>
 
-      {/* Mode grid */}
-      <div className="flex-1 px-5 pt-5 pb-6">
-        <div className="grid grid-cols-2 gap-3">
-          {modes.map((mode, i) => (
-            <motion.button
-              key={mode.id}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 + i * 0.05, duration: 0.4 }}
-              onClick={() => setSelected(mode.id)}
-              className={`relative rounded-xl overflow-hidden text-left transition-all duration-200 ${
-                selected === mode.id
-                  ? 'ring-2 ring-primary shadow-ios-lg'
-                  : 'shadow-ios'
-              }`}
-            >
-              {/* Background with warm gradient */}
-              <div className={`p-4 pb-3 ${
-                selected === mode.id
-                  ? 'bg-primary/8'
-                  : 'bg-card'
-              }`}>
-                {selected === mode.id && (
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="absolute top-3 right-3 w-5 h-5 rounded-full bg-primary flex items-center justify-center"
-                  >
-                    <Check className="text-primary-foreground" size={11} />
-                  </motion.div>
-                )}
-                <span className="text-2xl block">{mode.emoji}</span>
-                <p className="font-display text-foreground text-[15px] mt-2.5 leading-none">{mode.label}</p>
-                <p className="text-[10.5px] text-muted-foreground mt-1.5 leading-snug">{mode.desc}</p>
-              </div>
-            </motion.button>
-          ))}
-        </div>
+      {/* Mode list — fluid, no cards */}
+      <div className="flex-1 px-5 pt-4 pb-6">
+        {modes.map((mode, i) => (
+          <motion.button
+            key={mode.id}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 + i * 0.04, duration: 0.35 }}
+            onClick={() => setSelected(mode.id)}
+            className={`w-full flex items-center gap-3.5 py-3.5 text-left transition-colors ${
+              i > 0 ? 'border-t border-border/40' : ''
+            }`}
+          >
+            <span className="text-2xl w-8 text-center shrink-0">{mode.emoji}</span>
+            <div className="flex-1 min-w-0">
+              <p className={`font-display text-[15px] leading-none transition-colors ${
+                selected === mode.id ? 'text-primary' : 'text-foreground'
+              }`}>{mode.label}</p>
+              <p className="text-[11px] text-muted-foreground mt-1 leading-snug">{mode.desc}</p>
+            </div>
+            <div className={`w-5 h-5 rounded-full shrink-0 flex items-center justify-center transition-all ${
+              selected === mode.id
+                ? 'bg-primary'
+                : 'border-2 border-border'
+            }`}>
+              {selected === mode.id && (
+                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
+                  <Check className="text-primary-foreground" size={11} />
+                </motion.div>
+              )}
+            </div>
+          </motion.button>
+        ))}
       </div>
 
-      {/* Continue button */}
+      {/* Continue */}
       <div className="px-5 pb-10">
         <motion.button
           initial={{ opacity: 0, y: 8 }}
