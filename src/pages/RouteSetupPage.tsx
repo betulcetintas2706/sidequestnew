@@ -22,9 +22,9 @@ export default function RouteSetupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Hero header */}
-      <div className="relative h-[140px] overflow-hidden">
+    <div className="h-screen bg-background flex flex-col overflow-hidden">
+      {/* Compact hero */}
+      <div className="relative h-[110px] shrink-0 overflow-hidden">
         <motion.img
           src={heroImg}
           alt=""
@@ -43,120 +43,83 @@ export default function RouteSetupPage() {
           <ChevronLeft size={18} /> Back
         </button>
 
-        <div className="absolute bottom-0 left-0 right-0 px-5 pb-4">
-          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.5 }}>
-            <div className="editorial-rule mb-2" />
-            <h1 className="text-xl font-display text-foreground leading-none">Set up your route</h1>
-            <p className="text-[11px] text-muted-foreground mt-1">Customize your adventure</p>
-          </motion.div>
+        <div className="absolute bottom-0 left-0 right-0 px-5 pb-3">
+          <div className="editorial-rule mb-1.5" />
+          <h1 className="text-lg font-display text-foreground leading-none">Set up your route</h1>
         </div>
       </div>
 
       {/* Content */}
-      <div className="flex-1 px-5 pt-5 pb-6 flex flex-col">
+      <div className="flex-1 px-5 pt-4 pb-6 flex flex-col min-h-0">
         {/* Destination */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.35 }}
-          className="mb-6"
-        >
-          <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2 block">Destination</label>
+        <div className="mb-4">
+          <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-1.5 block">Destination</label>
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={15} />
             <input
               value={destination}
               onChange={e => { setDestination(e.target.value); setExploreAroundMe(false); }}
               placeholder="Where to?"
-              className="w-full pl-10 pr-4 py-3 rounded-xl bg-card border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-shadow"
+              className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-card border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-shadow"
             />
           </div>
           <button
             onClick={() => { setExploreAroundMe(!exploreAroundMe); setDestination(''); }}
-            className={`mt-2.5 flex items-center gap-2 text-xs font-medium transition-colors ${exploreAroundMe ? 'text-primary' : 'text-muted-foreground'}`}
+            className={`mt-1.5 flex items-center gap-1.5 text-[11px] font-medium transition-colors ${exploreAroundMe ? 'text-primary' : 'text-muted-foreground'}`}
           >
-            <MapPin size={13} /> Explore around me
+            <MapPin size={12} /> Explore around me
           </button>
-        </motion.div>
+        </div>
 
-        {/* Travel type */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.25, duration: 0.35 }}
-          className="mb-6"
-        >
-          <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2 block">Travel Type</label>
-          <div className="space-y-0">
+        {/* Travel type — inline toggle */}
+        <div className="mb-4">
+          <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-1.5 block">Travel Type</label>
+          <div className="flex gap-0 border border-border rounded-xl overflow-hidden">
             {([
-              { type: 'walking' as TravelType, icon: Footprints, label: 'Walking', desc: 'Paths, trails & sidewalks' },
-              { type: 'driving' as TravelType, icon: Car, label: 'Driving', desc: 'Roads & highways' },
-            ]).map(({ type, icon: Icon, label, desc }, i) => {
+              { type: 'walking' as TravelType, icon: Footprints, label: 'Walking' },
+              { type: 'driving' as TravelType, icon: Car, label: 'Driving' },
+            ]).map(({ type, icon: Icon, label }, i) => {
               const isActive = travelType === type;
               return (
                 <button
                   key={type}
                   onClick={() => setTravelType(type)}
-                  className={`w-full flex items-center gap-3.5 py-3 text-left transition-colors ${i > 0 ? 'border-t border-border/40' : ''}`}
+                  className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium transition-all ${
+                    i > 0 ? 'border-l border-border' : ''
+                  } ${isActive ? 'bg-primary/10 text-primary' : 'text-muted-foreground'}`}
                 >
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${isActive ? 'bg-primary/12' : 'bg-muted/60'}`}>
-                    <Icon size={15} className={`transition-colors ${isActive ? 'text-primary' : 'text-muted-foreground'}`} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className={`text-sm font-medium transition-colors ${isActive ? 'text-primary' : 'text-foreground'}`}>{label}</p>
-                    <p className="text-[11px] text-muted-foreground leading-snug">{desc}</p>
-                  </div>
-                  <div className={`w-4.5 h-4.5 rounded-full shrink-0 flex items-center justify-center transition-all ${isActive ? 'bg-primary' : 'border-2 border-border'}`}>
-                    {isActive && <div className="w-1.5 h-1.5 rounded-full bg-primary-foreground" />}
-                  </div>
+                  <Icon size={14} />
+                  {label}
                 </button>
               );
             })}
           </div>
-        </motion.div>
+        </div>
 
-        {/* Detour level */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.35 }}
-          className="mb-6"
-        >
-          <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2 block">Detour Level</label>
-          <div className="space-y-0">
-            {([
-              { level: 'light' as DetourLevel, desc: 'Stay close to the path' },
-              { level: 'moderate' as DetourLevel, desc: 'A healthy mix of planned & spontaneous' },
-              { level: 'bold' as DetourLevel, desc: 'Go wherever the wind takes you' },
-            ]).map(({ level, desc }, i) => {
+        {/* Detour level — inline toggle */}
+        <div className="mb-4">
+          <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-1.5 block">Detour Level</label>
+          <div className="flex gap-0 border border-border rounded-xl overflow-hidden">
+            {(['light', 'moderate', 'bold'] as DetourLevel[]).map((level, i) => {
               const isActive = detourLevel === level;
               return (
                 <button
                   key={level}
                   onClick={() => setDetourLevel(level)}
-                  className={`w-full flex items-center gap-3.5 py-3 text-left transition-colors ${i > 0 ? 'border-t border-border/40' : ''}`}
+                  className={`flex-1 py-2.5 text-xs font-medium capitalize transition-all ${
+                    i > 0 ? 'border-l border-border' : ''
+                  } ${isActive ? 'bg-primary/10 text-primary' : 'text-muted-foreground'}`}
                 >
-                  <div className="flex-1 min-w-0">
-                    <p className={`text-sm font-medium capitalize transition-colors ${isActive ? 'text-primary' : 'text-foreground'}`}>{level}</p>
-                    <p className="text-[11px] text-muted-foreground leading-snug">{desc}</p>
-                  </div>
-                  <div className={`w-4.5 h-4.5 rounded-full shrink-0 flex items-center justify-center transition-all ${isActive ? 'bg-primary' : 'border-2 border-border'}`}>
-                    {isActive && <div className="w-1.5 h-1.5 rounded-full bg-primary-foreground" />}
-                  </div>
+                  {level}
                 </button>
               );
             })}
           </div>
-        </motion.div>
+        </div>
 
         {/* Stop count */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35, duration: 0.35 }}
-          className="mb-8"
-        >
-          <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2 block">
+        <div className="mb-5">
+          <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-1.5 block">
             Stops &middot; <span className="text-foreground">{stopCount}</span>
           </label>
           <input
@@ -167,19 +130,19 @@ export default function RouteSetupPage() {
             onChange={e => setStopCount(Number(e.target.value))}
             className="w-full accent-primary"
           />
-          <div className="flex justify-between text-[10px] text-muted-foreground mt-1 px-0.5">
+          <div className="flex justify-between text-[10px] text-muted-foreground mt-0.5 px-0.5">
             <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
           </div>
-        </motion.div>
+        </div>
 
         {/* Preview button */}
         <motion.button
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.45, duration: 0.4 }}
+          transition={{ delay: 0.3, duration: 0.4 }}
           onClick={handlePreview}
           whileTap={{ scale: 0.98 }}
-          className="w-full py-4 rounded-2xl bg-primary text-primary-foreground font-semibold text-[15px] flex items-center justify-center gap-2 shadow-lg mt-auto"
+          className="w-full py-3.5 rounded-2xl bg-primary text-primary-foreground font-semibold text-[15px] flex items-center justify-center gap-2 shadow-lg mt-auto"
         >
           Preview Route <ChevronRight size={18} />
         </motion.button>
