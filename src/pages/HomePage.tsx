@@ -90,9 +90,6 @@ export default function HomePage() {
           onClick={() => navigate('/mode-select')}
           className="w-full flex items-center gap-3 group"
         >
-          <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0" style={{ background: 'linear-gradient(135deg, hsl(18 52% 53%), hsl(30 52% 58%))' }}>
-            <Compass className="text-primary-foreground" size={20} />
-          </div>
           <div className="flex-1 text-left">
             <p className="text-sm font-semibold text-foreground">Start a Route</p>
             <p className="text-[11px] text-muted-foreground">Choose a mode and explore your city</p>
