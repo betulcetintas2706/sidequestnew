@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Compass, Map, Camera, Sparkles, ChevronRight } from 'lucide-react';
+import { Compass, Map, Camera, ChevronRight } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { NavigatorMode } from '@/types';
 
@@ -34,7 +34,7 @@ const pages = [
     desc: 'Capture moments along the way. Keep them private in your Vault or share with the community to climb leaderboards.',
   },
   {
-    icon: <Sparkles className="text-primary" size={28} />,
+    icon: null,
     title: 'Ready to explore?',
     desc: 'Sign in to save your progress across devices, or continue as a guest.',
     hasAuth: true,
@@ -67,7 +67,7 @@ export default function OnboardingPage() {
             src={bgImages[page]}
             alt=""
             initial={{ opacity: 0, scale: 1.05 }}
-            animate={{ opacity: 0.15, scale: 1 }}
+            animate={{ opacity: page === 3 ? 0.25 : 0.15, scale: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.8 }}
             className="w-full h-full object-cover"
@@ -97,23 +97,25 @@ export default function OnboardingPage() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="flex-1 flex flex-col"
+            className={`flex-1 flex flex-col ${current.hasAuth ? 'justify-end' : ''}`}
           >
-            {/* Icon */}
-            <div className="w-14 h-14 rounded-2xl bg-primary/10 backdrop-blur-sm flex items-center justify-center mb-6 border border-primary/10">
-              {current.icon}
-            </div>
+            {/* Icon — only for non-auth pages */}
+            {current.icon && (
+              <div className="w-14 h-14 rounded-2xl bg-primary/10 backdrop-blur-sm flex items-center justify-center mb-6 border border-primary/10">
+                {current.icon}
+              </div>
+            )}
 
             {/* Editorial rule */}
             <div className="editorial-rule mb-4" />
 
             {/* Title */}
-            <h2 className="text-[1.65rem] leading-tight font-display mb-3 text-foreground">
+            <h2 className={`leading-tight font-display mb-3 text-foreground ${current.hasAuth ? 'text-[2rem]' : 'text-[1.65rem]'}`}>
               {current.title}
             </h2>
 
             {/* Description */}
-            <p className="text-muted-foreground text-sm leading-relaxed mb-8 max-w-[28ch]">
+            <p className={`text-muted-foreground leading-relaxed mb-8 ${current.hasAuth ? 'text-base max-w-[32ch]' : 'text-sm max-w-[28ch]'}`}>
               {current.desc}
             </p>
 
@@ -146,29 +148,31 @@ export default function OnboardingPage() {
               </div>
             )}
 
-            {/* Auth buttons */}
+            {/* Auth buttons — polished, bottom-anchored */}
             {current.hasAuth && (
-              <div className="space-y-3 mb-8">
+              <div className="space-y-3">
                 <motion.button
                   onClick={() => finish('apple')}
                   whileTap={{ scale: 0.97 }}
-                  className="w-full py-3.5 rounded-2xl bg-foreground text-background font-semibold text-sm flex items-center justify-center gap-2 shadow-md"
+                  className="w-full py-4 rounded-2xl bg-foreground text-background font-semibold text-[15px] flex items-center justify-center gap-2.5 shadow-lg"
                 >
                    Continue with Apple
                 </motion.button>
                 <motion.button
                   onClick={() => finish('google')}
                   whileTap={{ scale: 0.97 }}
-                  className="w-full py-3.5 rounded-2xl bg-card/90 backdrop-blur-sm border border-border font-semibold text-sm flex items-center justify-center gap-2 text-foreground shadow-sm"
+                  className="w-full py-4 rounded-2xl bg-card/90 backdrop-blur-sm border border-border font-semibold text-[15px] flex items-center justify-center gap-2.5 text-foreground shadow-sm"
                 >
                   Continue with Google
                 </motion.button>
-                <button
-                  onClick={() => finish('guest')}
-                  className="w-full py-3 text-muted-foreground text-sm font-medium hover:text-foreground transition-colors"
-                >
-                  Continue as Guest
-                </button>
+                <div className="pt-1">
+                  <button
+                    onClick={() => finish('guest')}
+                    className="w-full py-3 text-muted-foreground text-sm font-medium hover:text-foreground transition-colors underline underline-offset-4 decoration-border"
+                  >
+                    Skip for now
+                  </button>
+                </div>
               </div>
             )}
           </motion.div>
