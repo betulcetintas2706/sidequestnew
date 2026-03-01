@@ -4,27 +4,26 @@ import { MapPin } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import sideQuestLogo from '@/assets/sidequest-logo.png';
 
-import banffLake from '@/assets/hero/banff-lake.jpg';
-import niagara from '@/assets/hero/niagara.jpg';
-import aurora from '@/assets/hero/aurora.jpg';
-import montreal from '@/assets/hero/montreal.jpg';
-import tofino from '@/assets/hero/tofino.jpg';
-import train from '@/assets/hero/train.jpg';
-import lighthouse from '@/assets/hero/lighthouse.jpg';
-import lakeLouise from '@/assets/hero/lake-louise.jpg';
+import greatWall from '@/assets/hero/great-wall.jpg';
+import machuPicchu from '@/assets/hero/machu-picchu.jpg';
+import tajMahal from '@/assets/hero/taj-mahal.jpg';
+import colosseum from '@/assets/hero/colosseum.jpg';
+import christRedeemer from '@/assets/hero/christ-redeemer.jpg';
+import petra from '@/assets/hero/petra.jpg';
+import chichenItza from '@/assets/hero/chichen-itza.jpg';
 
 const col1 = [
-  { src: banffLake, label: 'Banff', aspect: 'aspect-[3/4]' },
-  { src: niagara, label: 'Niagara Falls', aspect: 'aspect-square' },
-  { src: tofino, label: 'Tofino', aspect: 'aspect-[3/4]' },
-  { src: lighthouse, label: 'Nova Scotia', aspect: 'aspect-square' },
+  { src: greatWall, label: 'Great Wall', aspect: 'aspect-[3/4]' },
+  { src: machuPicchu, label: 'Machu Picchu', aspect: 'aspect-square' },
+  { src: petra, label: 'Petra', aspect: 'aspect-[3/4]' },
+  { src: christRedeemer, label: 'Christ the Redeemer', aspect: 'aspect-square' },
 ];
 
 const col2 = [
-  { src: montreal, label: 'Montréal', aspect: 'aspect-square' },
-  { src: aurora, label: 'Northern Lights', aspect: 'aspect-[4/5]' },
-  { src: train, label: 'Rocky Mountaineer', aspect: 'aspect-[4/5]' },
-  { src: lakeLouise, label: 'Lake Louise', aspect: 'aspect-[3/4]' },
+  { src: tajMahal, label: 'Taj Mahal', aspect: 'aspect-[3/4]' },
+  { src: colosseum, label: 'Colosseum', aspect: 'aspect-[4/5]' },
+  { src: chichenItza, label: 'Chichén Itzá', aspect: 'aspect-[4/5]' },
+  { src: greatWall, label: 'Great Wall', aspect: 'aspect-square' },
 ];
 
 export default function HeroPage() {
@@ -70,7 +69,7 @@ export default function HeroPage() {
           </motion.div>
         </div>
 
-        {/* Gradient overlays for readability */}
+        {/* Gradient overlays */}
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background/40 to-background" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
       </div>
