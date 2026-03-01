@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Compass, Flame, Trophy, ChevronRight, MapPin, Target } from 'lucide-react';
+import { Compass, Flame, Trophy, ChevronRight, Zap, Star } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
-import { seedSpots } from '@/data/seedData';
+import { seedSpots, seedChallenges } from '@/data/seedData';
 import BottomTabBar from '@/components/BottomTabBar';
 
 function getGreeting() {
@@ -12,7 +12,10 @@ function getGreeting() {
   return 'Good evening';
 }
 
-const trendingSpots = [seedSpots[0], seedSpots[4], seedSpots[1], seedSpots[5], seedSpots[9]];
+// Interleave spots and challenges into a single feed
+const feedSpots = [seedSpots[0], seedSpots[4], seedSpots[1], seedSpots[5], seedSpots[9]];
+const activeChallenges = seedChallenges.filter(c => c.active).slice(0, 2);
+const challengeImages = [seedSpots[2].imageUrl, seedSpots[6].imageUrl];
 
 export default function HomePage() {
   const { user } = useApp();
@@ -52,25 +55,15 @@ export default function HomePage() {
         </motion.button>
       </div>
 
-      {/* Quick actions — small inline chips */}
-      <div className="px-5 pb-5 flex gap-2">
-        <button onClick={() => navigate('/challenges')} className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-muted text-xs font-medium text-foreground">
-          <Target size={13} className="text-secondary" /> Challenges
-        </button>
-        <button onClick={() => navigate('/explore')} className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-muted text-xs font-medium text-foreground">
-          <MapPin size={13} className="text-primary" /> Explore
-        </button>
-      </div>
-
-      {/* Feed — flowing image content, no sections */}
+      {/* Feed — mixed spots & challenges, no sections */}
       <div className="px-5 pb-2 flex items-center justify-between">
-        <p className="text-xs font-semibold text-foreground">Trending near you</p>
-        <button onClick={() => navigate('/explore')} className="text-[11px] text-primary font-medium">See all</button>
+        <p className="text-xs font-semibold text-foreground">For you</p>
       </div>
 
       <div className="px-4 columns-2 gap-2.5 space-y-2.5">
-        {trendingSpots.map((spot, i) => {
-          const heights = ['aspect-[3/4]', 'aspect-square', 'aspect-[4/5]', 'aspect-square', 'aspect-[3/4]'];
+        {/* First two spots */}
+        {feedSpots.slice(0, 2).map((spot, i) => {
+          const heights = ['aspect-[3/4]', 'aspect-square'];
           return (
             <motion.button
               key={spot.id}
@@ -81,11 +74,7 @@ export default function HomePage() {
               className="break-inside-avoid w-full rounded-xl overflow-hidden relative group text-left"
             >
               <div className={`${heights[i]} relative`}>
-                <img
-                  src={spot.imageUrl}
-                  alt={spot.name}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
+                <img src={spot.imageUrl} alt={spot.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-2.5">
                   <p className="text-[13px] text-white font-semibold leading-tight">{spot.name}</p>
@@ -95,24 +84,110 @@ export default function HomePage() {
             </motion.button>
           );
         })}
+
+        {/* Inline challenge card woven into the feed */}
+        {activeChallenges[0] && (
+          <motion.button
+            key={'challenge-' + activeChallenges[0].id}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.14, duration: 0.4 }}
+            onClick={() => navigate('/challenge/' + activeChallenges[0].id)}
+            className="break-inside-avoid w-full rounded-xl overflow-hidden relative group text-left"
+          >
+            <div className="aspect-[4/5] relative">
+              <img src={challengeImages[0]} alt={activeChallenges[0].title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
+              <div className="absolute top-2 left-2 flex items-center gap-1 bg-accent/90 backdrop-blur-sm rounded-full px-2 py-0.5">
+                <Zap className="text-accent-foreground" size={10} />
+                <span className="text-[9px] font-semibold text-accent-foreground uppercase">Challenge</span>
+              </div>
+              <div className="absolute bottom-0 left-0 right-0 p-2.5">
+                <p className="text-[13px] text-white font-semibold leading-tight">{activeChallenges[0].title}</p>
+                <div className="flex items-center gap-1.5 mt-1">
+                  <Star size={10} className="text-white/70" />
+                  <span className="text-[10px] text-white/60">{activeChallenges[0].rewardPoints} pts</span>
+                </div>
+              </div>
+            </div>
+          </motion.button>
+        )}
+
+        {/* More spots */}
+        {feedSpots.slice(2, 4).map((spot, i) => {
+          const heights = ['aspect-square', 'aspect-[3/4]'];
+          return (
+            <motion.button
+              key={spot.id}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: (i + 3) * 0.06, duration: 0.4 }}
+              onClick={() => navigate('/stop/' + spot.id)}
+              className="break-inside-avoid w-full rounded-xl overflow-hidden relative group text-left"
+            >
+              <div className={`${heights[i]} relative`}>
+                <img src={spot.imageUrl} alt={spot.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-2.5">
+                  <p className="text-[13px] text-white font-semibold leading-tight">{spot.name}</p>
+                  <p className="text-[10px] text-white/60 mt-0.5">{spot.category}</p>
+                </div>
+              </div>
+            </motion.button>
+          );
+        })}
+
+        {/* Second challenge */}
+        {activeChallenges[1] && (
+          <motion.button
+            key={'challenge-' + activeChallenges[1].id}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.32, duration: 0.4 }}
+            onClick={() => navigate('/challenge/' + activeChallenges[1].id)}
+            className="break-inside-avoid w-full rounded-xl overflow-hidden relative group text-left"
+          >
+            <div className="aspect-square relative">
+              <img src={challengeImages[1]} alt={activeChallenges[1].title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
+              <div className="absolute top-2 left-2 flex items-center gap-1 bg-accent/90 backdrop-blur-sm rounded-full px-2 py-0.5">
+                <Zap className="text-accent-foreground" size={10} />
+                <span className="text-[9px] font-semibold text-accent-foreground uppercase">Challenge</span>
+              </div>
+              <div className="absolute bottom-0 left-0 right-0 p-2.5">
+                <p className="text-[13px] text-white font-semibold leading-tight">{activeChallenges[1].title}</p>
+                <div className="flex items-center gap-1.5 mt-1">
+                  <Star size={10} className="text-white/70" />
+                  <span className="text-[10px] text-white/60">{activeChallenges[1].rewardPoints} pts</span>
+                </div>
+              </div>
+            </div>
+          </motion.button>
+        )}
+
+        {/* Last spot */}
+        {feedSpots[4] && (
+          <motion.button
+            key={feedSpots[4].id}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.38, duration: 0.4 }}
+            onClick={() => navigate('/stop/' + feedSpots[4].id)}
+            className="break-inside-avoid w-full rounded-xl overflow-hidden relative group text-left"
+          >
+            <div className="aspect-[3/4] relative">
+              <img src={feedSpots[4].imageUrl} alt={feedSpots[4].name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-2.5">
+                <p className="text-[13px] text-white font-semibold leading-tight">{feedSpots[4].name}</p>
+                <p className="text-[10px] text-white/60 mt-0.5">{feedSpots[4].category}</p>
+              </div>
+            </div>
+          </motion.button>
+        )}
       </div>
 
-      {/* Leaderboard — simple inline list, no well/card */}
-      <div className="px-5 pt-6 pb-2">
-        <p className="text-xs font-semibold text-foreground mb-3">Weekly Leaderboard</p>
-        {['@adventurer_sam', '@urban_wanderer', '@nature_nina'].map((name, i) => (
-          <div key={name} className={`flex items-center gap-3 py-2.5 ${i > 0 ? 'border-t border-border/40' : ''}`}>
-            <span className={`text-[11px] font-mono w-4 ${i === 0 ? 'text-accent font-bold' : 'text-muted-foreground/50'}`}>
-              {i + 1}
-            </span>
-            <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center">
-              <span className="text-[10px] font-semibold text-muted-foreground">{name[1].toUpperCase()}</span>
-            </div>
-            <span className="flex-1 text-sm text-foreground">{name}</span>
-            <span className="text-[11px] text-muted-foreground tabular-nums">{[320, 285, 240][i]} pts</span>
-          </div>
-        ))}
-      </div>
+
 
       <BottomTabBar />
     </div>
