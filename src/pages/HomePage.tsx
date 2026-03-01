@@ -1,121 +1,140 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Compass, Flame, Trophy, ChevronRight, MapPin, Target } from 'lucide-react';
+import { Compass, Flame, Trophy, ChevronRight, MapPin, Target, ArrowUpRight } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import BottomTabBar from '@/components/BottomTabBar';
+
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return 'Good morning';
+  if (h < 17) return 'Good afternoon';
+  return 'Good evening';
+}
 
 export default function HomePage() {
   const { user } = useApp();
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-background pb-24">
-      {/* Header */}
-      <div className="px-5 pt-14 pb-4">
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-          <p className="text-muted-foreground text-sm">Good to see you,</p>
-          <h1 className="text-2xl font-display text-foreground">{user.name}</h1>
+    <div className="min-h-screen bg-background pb-24 grain">
+      {/* Header — editorial style */}
+      <div className="px-6 pt-14 pb-2">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
+          <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-medium">
+            {getGreeting()}
+          </p>
+          <h1 className="text-3xl font-display text-foreground mt-1 leading-tight">{user.name}</h1>
+          <div className="editorial-rule mt-3" />
         </motion.div>
       </div>
 
-      {/* Stats row */}
-      <div className="px-5 mb-6">
-        <div className="flex gap-3">
-          <div className="ios-card flex-1 p-4 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center">
-              <Trophy className="text-accent" size={20} />
-            </div>
-            <div>
-              <p className="text-lg font-semibold text-foreground">{user.points}</p>
-              <p className="text-[11px] text-muted-foreground">Points</p>
-            </div>
-          </div>
-          <div className="ios-card flex-1 p-4 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Flame className="text-primary" size={20} />
-            </div>
-            <div>
-              <p className="text-lg font-semibold text-foreground">{user.streak}</p>
-              <p className="text-[11px] text-muted-foreground">Day Streak</p>
-            </div>
-          </div>
+      {/* Stats — inline, not carded */}
+      <div className="px-6 py-4 flex items-center gap-6">
+        <div className="flex items-center gap-2">
+          <Trophy className="text-accent" size={16} />
+          <span className="text-sm font-semibold text-foreground">{user.points}</span>
+          <span className="text-[11px] text-muted-foreground">pts</span>
+        </div>
+        <div className="w-px h-4 bg-border" />
+        <div className="flex items-center gap-2">
+          <Flame className="text-primary" size={16} />
+          <span className="text-sm font-semibold text-foreground">{user.streak}</span>
+          <span className="text-[11px] text-muted-foreground">day streak</span>
         </div>
       </div>
 
-      {/* Main CTA */}
-      <div className="px-5 mb-6">
+      {/* Primary CTA — full-bleed gradient, not a card */}
+      <div className="px-5 mb-8">
         <motion.button
           whileTap={{ scale: 0.98 }}
           onClick={() => navigate('/mode-select')}
-          className="w-full ios-card p-5 flex items-center gap-4 shadow-ios-lg"
+          className="w-full relative overflow-hidden rounded-2xl p-6 text-left"
+          style={{
+            background: 'linear-gradient(135deg, hsl(18 52% 53%), hsl(30 52% 58%))',
+          }}
         >
-          <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center shadow-ios">
-            <Compass className="text-primary-foreground" size={28} />
+          <div className="relative z-10">
+            <Compass className="text-primary-foreground/80 mb-3" size={28} />
+            <p className="text-lg font-display text-primary-foreground leading-snug">
+              Start a Route
+            </p>
+            <p className="text-xs text-primary-foreground/70 mt-1">
+              Choose a mode and explore your city
+            </p>
           </div>
-          <div className="flex-1 text-left">
-            <p className="font-semibold text-foreground">Start a Route</p>
-            <p className="text-xs text-muted-foreground mt-0.5">Choose a mode and explore</p>
-          </div>
-          <ChevronRight className="text-muted-foreground" size={20} />
+          <ChevronRight className="absolute right-5 top-1/2 -translate-y-1/2 text-primary-foreground/40" size={24} />
+          {/* Decorative circle */}
+          <div className="absolute -bottom-8 -right-8 w-32 h-32 rounded-full bg-primary-foreground/5" />
         </motion.button>
       </div>
 
-      {/* Quick actions */}
-      <div className="px-5 mb-6">
-        <div className="flex gap-3">
-          <motion.button
-            whileTap={{ scale: 0.97 }}
-            onClick={() => navigate('/challenges')}
-            className="ios-card flex-1 p-4 flex flex-col items-center gap-2"
-          >
-            <Target className="text-secondary" size={24} />
-            <span className="text-xs font-medium text-foreground">Find It</span>
-          </motion.button>
-          <motion.button
-            whileTap={{ scale: 0.97 }}
-            onClick={() => navigate('/explore')}
-            className="ios-card flex-1 p-4 flex flex-col items-center gap-2"
-          >
-            <MapPin className="text-primary" size={24} />
-            <span className="text-xs font-medium text-foreground">Explore Nearby</span>
-          </motion.button>
-        </div>
+      {/* Quick actions — asymmetric, text-led instead of icon-centered */}
+      <div className="px-6 mb-8 flex gap-3">
+        <motion.button
+          whileTap={{ scale: 0.97 }}
+          onClick={() => navigate('/challenges')}
+          className="flex-1 well text-left group"
+        >
+          <Target className="text-secondary mb-2" size={18} />
+          <p className="text-sm font-semibold text-foreground">Find It</p>
+          <p className="text-[10px] text-muted-foreground mt-0.5">Photo challenges</p>
+        </motion.button>
+        <motion.button
+          whileTap={{ scale: 0.97 }}
+          onClick={() => navigate('/explore')}
+          className="flex-1 well text-left group"
+        >
+          <MapPin className="text-primary mb-2" size={18} />
+          <p className="text-sm font-semibold text-foreground">Explore</p>
+          <p className="text-[10px] text-muted-foreground mt-0.5">Nearby spots</p>
+        </motion.button>
       </div>
 
-      {/* Trending section */}
-      <div className="px-5 mb-6">
-        <h3 className="text-sm font-semibold text-foreground mb-3">Trending near you</h3>
-        <div className="flex gap-3 overflow-x-auto pb-2 -mx-5 px-5 scrollbar-hide">
+      {/* Trending — editorial list, not card carousel */}
+      <div className="px-6 mb-8">
+        <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground font-semibold mb-3">
+          Trending near you
+        </p>
+        <div className="space-y-0 divide-y divide-border">
           {['Hidden Mural Alley', 'Rooftop Garden Café', 'Sunset Overlook'].map((name, i) => (
-            <motion.div
+            <motion.button
               key={name}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 + i * 0.1 }}
-              className="ios-card min-w-[160px] p-3 flex-shrink-0"
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.15 + i * 0.08 }}
+              className="w-full flex items-center justify-between py-3.5 group text-left"
             >
-              <div className="w-full h-20 rounded-xl bg-muted mb-2 flex items-center justify-center">
-                <MapPin className="text-muted-foreground" size={20} />
+              <div className="flex items-center gap-3">
+                <span className="text-xs text-muted-foreground/60 font-mono w-4">{String(i + 1).padStart(2, '0')}</span>
+                <div>
+                  <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">{name}</p>
+                  <p className="text-[10px] text-muted-foreground">0.{i + 2} mi</p>
+                </div>
               </div>
-              <p className="text-xs font-medium text-foreground truncate">{name}</p>
-              <p className="text-[10px] text-muted-foreground mt-0.5">📍 0.{i + 2} mi away</p>
-            </motion.div>
+              <ArrowUpRight className="text-muted-foreground/40 group-hover:text-primary transition-colors" size={14} />
+            </motion.button>
           ))}
         </div>
       </div>
 
-      {/* Weekly leaderboard preview */}
-      <div className="px-5">
-        <h3 className="text-sm font-semibold text-foreground mb-3">Weekly Leaderboard</h3>
-        <div className="ios-card p-4">
+      {/* Weekly leaderboard — compact, editorial */}
+      <div className="px-6 mb-6">
+        <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground font-semibold mb-3">
+          Weekly Leaderboard
+        </p>
+        <div className="well">
           {['@adventurer_sam', '@urban_wanderer', '@nature_nina'].map((name, i) => (
-            <div key={name} className={`flex items-center gap-3 ${i > 0 ? 'mt-3 pt-3 border-t border-border' : ''}`}>
-              <span className="text-sm font-semibold text-accent w-5">{i + 1}</span>
-              <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-xs">
-                {name[1].toUpperCase()}
+            <div key={name} className={`flex items-center gap-3 ${i > 0 ? 'mt-2.5 pt-2.5 border-t border-border/50' : ''}`}>
+              <span className={`text-xs font-mono w-4 ${i === 0 ? 'text-accent font-bold' : 'text-muted-foreground/60'}`}>
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <div className="w-7 h-7 rounded-full bg-border flex items-center justify-center">
+                <span className="text-[10px] font-semibold text-muted-foreground">
+                  {name[1].toUpperCase()}
+                </span>
               </div>
               <span className="flex-1 text-sm text-foreground">{name}</span>
-              <span className="text-xs text-muted-foreground">{[320, 285, 240][i]} pts</span>
+              <span className="text-[11px] text-muted-foreground tabular-nums">{[320, 285, 240][i]}</span>
             </div>
           ))}
         </div>
