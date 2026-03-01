@@ -1,19 +1,19 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Check, Compass, UtensilsCrossed, TreePine, Palette, Users, Sparkles } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { NavigatorMode } from '@/types';
 
 import heroImg from '@/assets/hero/kyoto.jpg';
 
-const modes: { id: NavigatorMode; emoji: string; label: string; desc: string }[] = [
-  { id: 'adventure', emoji: '🧭', label: 'Adventure', desc: 'Urban exploration, rooftops, hidden passages' },
-  { id: 'foodie', emoji: '🍜', label: 'Foodie', desc: 'Cafés, street food, hole-in-the-wall gems' },
-  { id: 'nature', emoji: '🌿', label: 'Nature', desc: 'Parks, trails, gardens, waterways' },
-  { id: 'culture', emoji: '🎭', label: 'Culture', desc: 'Murals, galleries, historic landmarks' },
-  { id: 'social', emoji: '🤝', label: 'Social', desc: 'Markets, community spaces, live music' },
-  { id: 'mystery', emoji: '🔮', label: 'Mystery', desc: 'Random surprises, no spoilers' },
+const modes: { id: NavigatorMode; icon: typeof Compass; label: string; desc: string }[] = [
+  { id: 'adventure', icon: Compass, label: 'Adventure', desc: 'Urban exploration, rooftops, hidden passages' },
+  { id: 'foodie', icon: UtensilsCrossed, label: 'Foodie', desc: 'Cafés, street food, hole-in-the-wall gems' },
+  { id: 'nature', icon: TreePine, label: 'Nature', desc: 'Parks, trails, gardens, waterways' },
+  { id: 'culture', icon: Palette, label: 'Culture', desc: 'Murals, galleries, historic landmarks' },
+  { id: 'social', icon: Users, label: 'Social', desc: 'Markets, community spaces, live music' },
+  { id: 'mystery', icon: Sparkles, label: 'Mystery', desc: 'Random surprises, no spoilers' },
 ];
 
 export default function ModeSelectPage() {
@@ -59,39 +59,45 @@ export default function ModeSelectPage() {
         </div>
       </div>
 
-      {/* Mode list — fluid, no cards */}
+      {/* Mode list */}
       <div className="flex-1 px-5 pt-4 pb-6">
-        {modes.map((mode, i) => (
-          <motion.button
-            key={mode.id}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 + i * 0.04, duration: 0.35 }}
-            onClick={() => setSelected(mode.id)}
-            className={`w-full flex items-center gap-3.5 py-3.5 text-left transition-colors ${
-              i > 0 ? 'border-t border-border/40' : ''
-            }`}
-          >
-            <span className="text-2xl w-8 text-center shrink-0">{mode.emoji}</span>
-            <div className="flex-1 min-w-0">
-              <p className={`font-display text-[15px] leading-none transition-colors ${
-                selected === mode.id ? 'text-primary' : 'text-foreground'
-              }`}>{mode.label}</p>
-              <p className="text-[11px] text-muted-foreground mt-1 leading-snug">{mode.desc}</p>
-            </div>
-            <div className={`w-5 h-5 rounded-full shrink-0 flex items-center justify-center transition-all ${
-              selected === mode.id
-                ? 'bg-primary'
-                : 'border-2 border-border'
-            }`}>
-              {selected === mode.id && (
-                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
-                  <Check className="text-primary-foreground" size={11} />
-                </motion.div>
-              )}
-            </div>
-          </motion.button>
-        ))}
+        {modes.map((mode, i) => {
+          const Icon = mode.icon;
+          const isSelected = selected === mode.id;
+          return (
+            <motion.button
+              key={mode.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 + i * 0.04, duration: 0.35 }}
+              onClick={() => setSelected(mode.id)}
+              className={`w-full flex items-center gap-3.5 py-3.5 text-left transition-colors ${
+                i > 0 ? 'border-t border-border/40' : ''
+              }`}
+            >
+              <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition-colors ${
+                isSelected ? 'bg-primary/12' : 'bg-muted/60'
+              }`}>
+                <Icon size={17} className={`transition-colors ${isSelected ? 'text-primary' : 'text-muted-foreground'}`} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className={`font-display text-[15px] leading-none transition-colors ${
+                  isSelected ? 'text-primary' : 'text-foreground'
+                }`}>{mode.label}</p>
+                <p className="text-[11px] text-muted-foreground mt-1 leading-snug">{mode.desc}</p>
+              </div>
+              <div className={`w-5 h-5 rounded-full shrink-0 flex items-center justify-center transition-all ${
+                isSelected ? 'bg-primary' : 'border-2 border-border'
+              }`}>
+                {isSelected && (
+                  <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
+                    <Check className="text-primary-foreground" size={11} />
+                  </motion.div>
+                )}
+              </div>
+            </motion.button>
+          );
+        })}
       </div>
 
       {/* Continue */}
