@@ -5,7 +5,7 @@ import { useApp } from '@/context/AppContext';
 import { seedSpots, seedChallenges } from '@/data/seedData';
 import BottomTabBar from '@/components/BottomTabBar';
 
-import heroImg from '@/assets/hero/santorini.jpg';
+import heroImg from '@/assets/hero/train.jpg';
 
 
 function getGreeting() {
