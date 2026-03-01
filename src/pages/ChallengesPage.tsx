@@ -1,14 +1,17 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Target, Zap, Star } from 'lucide-react';
-import { seedChallenges } from '@/data/seedData';
+import { Zap, Star } from 'lucide-react';
+import { seedChallenges, seedSpots } from '@/data/seedData';
 import BottomTabBar from '@/components/BottomTabBar';
 
 const difficultyColors: Record<string, string> = {
-  easy: 'bg-secondary/15 text-secondary',
-  medium: 'bg-accent/15 text-accent',
-  hard: 'bg-primary/15 text-primary',
+  easy: 'bg-secondary/20 text-secondary',
+  medium: 'bg-accent/20 text-accent',
+  hard: 'bg-primary/20 text-primary',
 };
+
+// Map challenges to spot images for visual richness
+const challengeImages = [seedSpots[0].imageUrl, seedSpots[2].imageUrl, seedSpots[4].imageUrl, seedSpots[6].imageUrl];
 
 export default function ChallengesPage() {
   const navigate = useNavigate();
@@ -22,29 +25,34 @@ export default function ChallengesPage() {
         <p className="text-sm text-muted-foreground mt-1">Find hidden gems in your city</p>
       </div>
 
-      {/* Featured */}
+      {/* Featured — full-bleed image card */}
       {featured && (
         <div className="px-5 mb-6">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             onClick={() => navigate('/challenge/' + featured.id)}
-            className="ios-card p-5 shadow-ios-lg cursor-pointer relative overflow-hidden"
+            className="rounded-2xl overflow-hidden cursor-pointer relative"
           >
-            <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-            <div className="flex items-center gap-2 mb-2">
-              <Zap className="text-accent" size={16} />
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-accent">Featured</span>
-            </div>
-            <h3 className="text-lg font-display text-foreground mb-1">{featured.title}</h3>
-            <p className="text-xs text-muted-foreground mb-3 leading-relaxed">{featured.description}</p>
-            <div className="flex items-center gap-3">
-              <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold capitalize ${difficultyColors[featured.difficulty]}`}>
-                {featured.difficulty}
-              </span>
-              <span className="flex items-center gap-1 text-xs text-accent">
-                <Star size={12} /> {featured.rewardPoints} pts
-              </span>
+            <div className="aspect-[16/9] relative">
+              <img src={challengeImages[0]} alt={featured.title} className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+              <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-accent/90 backdrop-blur-sm rounded-full px-2.5 py-1">
+                <Zap className="text-white" size={11} />
+                <span className="text-[10px] font-semibold text-white uppercase">Featured</span>
+              </div>
+              <div className="absolute bottom-0 left-0 right-0 p-4">
+                <h3 className="text-lg font-display text-white mb-1">{featured.title}</h3>
+                <p className="text-xs text-white/70 mb-2 leading-relaxed line-clamp-2">{featured.description}</p>
+                <div className="flex items-center gap-3">
+                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold capitalize bg-white/20 text-white`}>
+                    {featured.difficulty}
+                  </span>
+                  <span className="flex items-center gap-1 text-xs text-white/80">
+                    <Star size={12} /> {featured.rewardPoints} pts
+                  </span>
+                </div>
+              </div>
             </div>
           </motion.div>
         </div>
@@ -53,26 +61,27 @@ export default function ChallengesPage() {
       {/* Other challenges */}
       <div className="px-5">
         <h3 className="text-sm font-semibold text-foreground mb-3">Nearby</h3>
-        <div className="space-y-3">
+        <div className="columns-2 gap-3 space-y-3">
           {active.slice(1).map((c, i) => (
             <motion.div
               key={c.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.05 }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: i * 0.06 }}
               onClick={() => navigate('/challenge/' + c.id)}
-              className="ios-card p-4 flex items-center gap-3 cursor-pointer"
+              className="break-inside-avoid rounded-2xl overflow-hidden cursor-pointer relative group"
             >
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                <Target className="text-primary" size={20} />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-medium text-foreground">{c.title}</p>
-                <div className="flex items-center gap-2 mt-0.5">
-                  <span className={`px-1.5 py-0.5 rounded text-[9px] font-semibold capitalize ${difficultyColors[c.difficulty]}`}>
-                    {c.difficulty}
-                  </span>
-                  <span className="text-[11px] text-accent">{c.rewardPoints} pts</span>
+              <div className="aspect-square relative">
+                <img src={challengeImages[(i + 1) % challengeImages.length]} alt={c.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-3">
+                  <p className="text-sm text-white font-semibold leading-tight">{c.title}</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className={`px-1.5 py-0.5 rounded text-[9px] font-semibold capitalize bg-white/20 text-white`}>
+                      {c.difficulty}
+                    </span>
+                    <span className="text-[10px] text-white/70">{c.rewardPoints} pts</span>
+                  </div>
                 </div>
               </div>
             </motion.div>
