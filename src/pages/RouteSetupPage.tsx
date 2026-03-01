@@ -87,24 +87,28 @@ export default function RouteSetupPage() {
           className="mb-6"
         >
           <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2 block">Travel Type</label>
-          <div className="flex gap-3">
+          <div className="space-y-0">
             {([
-              { type: 'walking' as TravelType, icon: Footprints, label: 'Walking' },
-              { type: 'driving' as TravelType, icon: Car, label: 'Driving' },
-            ]).map(({ type, icon: Icon, label }) => {
+              { type: 'walking' as TravelType, icon: Footprints, label: 'Walking', desc: 'Paths, trails & sidewalks' },
+              { type: 'driving' as TravelType, icon: Car, label: 'Driving', desc: 'Roads & highways' },
+            ]).map(({ type, icon: Icon, label, desc }, i) => {
               const isActive = travelType === type;
               return (
                 <button
                   key={type}
                   onClick={() => setTravelType(type)}
-                  className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium transition-all ${
-                    isActive
-                      ? 'bg-primary/10 text-primary border border-primary/20'
-                      : 'bg-muted/50 text-muted-foreground border border-transparent'
-                  }`}
+                  className={`w-full flex items-center gap-3.5 py-3 text-left transition-colors ${i > 0 ? 'border-t border-border/40' : ''}`}
                 >
-                  <Icon size={16} />
-                  {label}
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${isActive ? 'bg-primary/12' : 'bg-muted/60'}`}>
+                    <Icon size={15} className={`transition-colors ${isActive ? 'text-primary' : 'text-muted-foreground'}`} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-sm font-medium transition-colors ${isActive ? 'text-primary' : 'text-foreground'}`}>{label}</p>
+                    <p className="text-[11px] text-muted-foreground leading-snug">{desc}</p>
+                  </div>
+                  <div className={`w-4.5 h-4.5 rounded-full shrink-0 flex items-center justify-center transition-all ${isActive ? 'bg-primary' : 'border-2 border-border'}`}>
+                    {isActive && <div className="w-1.5 h-1.5 rounded-full bg-primary-foreground" />}
+                  </div>
                 </button>
               );
             })}
@@ -119,20 +123,26 @@ export default function RouteSetupPage() {
           className="mb-6"
         >
           <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2 block">Detour Level</label>
-          <div className="flex gap-2">
-            {(['light', 'moderate', 'bold'] as DetourLevel[]).map(level => {
+          <div className="space-y-0">
+            {([
+              { level: 'light' as DetourLevel, desc: 'Stay close to the path' },
+              { level: 'moderate' as DetourLevel, desc: 'A healthy mix of planned & spontaneous' },
+              { level: 'bold' as DetourLevel, desc: 'Go wherever the wind takes you' },
+            ]).map(({ level, desc }, i) => {
               const isActive = detourLevel === level;
               return (
                 <button
                   key={level}
                   onClick={() => setDetourLevel(level)}
-                  className={`flex-1 py-2.5 rounded-xl text-xs font-medium capitalize transition-all ${
-                    isActive
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-muted/50 text-muted-foreground'
-                  }`}
+                  className={`w-full flex items-center gap-3.5 py-3 text-left transition-colors ${i > 0 ? 'border-t border-border/40' : ''}`}
                 >
-                  {level}
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-sm font-medium capitalize transition-colors ${isActive ? 'text-primary' : 'text-foreground'}`}>{level}</p>
+                    <p className="text-[11px] text-muted-foreground leading-snug">{desc}</p>
+                  </div>
+                  <div className={`w-4.5 h-4.5 rounded-full shrink-0 flex items-center justify-center transition-all ${isActive ? 'bg-primary' : 'border-2 border-border'}`}>
+                    {isActive && <div className="w-1.5 h-1.5 rounded-full bg-primary-foreground" />}
+                  </div>
                 </button>
               );
             })}
