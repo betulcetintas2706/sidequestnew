@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
+import { useEffect } from 'react';
 import { MapPin } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import sideQuestLogo from '@/assets/sidequest-logo.png';
@@ -85,13 +86,13 @@ export default function HeroPage() {
         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
       </div>
 
-      {/* Content overlay */}
-      <div className="relative z-10 min-h-screen flex flex-col items-center justify-end px-6 pb-16 safe-bottom">
+      {/* Content overlay — bottom anchored, minimal */}
+      <div className="relative z-10 min-h-screen flex flex-col items-center justify-end px-6 pb-12 safe-bottom">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col items-center text-center max-w-sm"
+          className="flex flex-col items-center text-center"
         >
           <motion.img
             src={sideQuestLogo}
@@ -99,14 +100,14 @@ export default function HeroPage() {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.3, duration: 0.6 }}
-            className="w-20 h-20 rounded-2xl mb-5 shadow-lg object-contain"
+            className="w-16 h-16 rounded-2xl mb-4 shadow-lg object-contain"
           />
 
           <motion.h1
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.8 }}
-            className="text-4xl font-display text-foreground mb-2"
+            className="text-3xl font-display text-foreground mb-1"
           >
             SideQuest
           </motion.h1>
@@ -115,32 +116,39 @@ export default function HeroPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7, duration: 0.8 }}
-            className="text-lg font-display italic text-primary leading-snug mb-8"
+            className="text-sm font-display italic text-primary leading-snug mb-10"
           >
             "The most interesting way there."
           </motion.p>
 
-          <motion.button
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1, duration: 0.5 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={handleStart}
-            className="w-full py-4 rounded-2xl bg-primary text-primary-foreground font-semibold text-base shadow-lg active:scale-[0.97] transition-transform"
-          >
-            Start a SideQuest
-          </motion.button>
-
-          <motion.button
+          {/* Swipe-up pill CTA */}
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.2, duration: 0.5 }}
-            onClick={() => { dismissHero(); navigate('/explore'); }}
-            className="mt-4 flex items-center gap-1.5 text-secondary text-sm font-medium"
+            transition={{ delay: 1, duration: 0.6 }}
+            className="flex flex-col items-center gap-3"
           >
-            <MapPin size={14} />
-            Explore nearby
-          </motion.button>
+            <motion.button
+              onClick={handleStart}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center gap-2 px-6 py-3 rounded-full bg-foreground/10 backdrop-blur-xl border border-foreground/10 text-foreground text-sm font-medium"
+            >
+              <motion.span
+                animate={{ y: [0, -3, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+              >
+                ↑
+              </motion.span>
+              Start exploring
+            </motion.button>
+
+            <button
+              onClick={() => { dismissHero(); navigate('/explore'); }}
+              className="text-[11px] text-muted-foreground"
+            >
+              or browse nearby spots
+            </button>
+          </motion.div>
         </motion.div>
       </div>
     </div>
