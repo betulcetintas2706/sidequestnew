@@ -71,7 +71,7 @@ export default function RoutePreviewPage() {
             </div>
           </div>
 
-          {/* Stops */}
+          {/* Stops with photos */}
           <div className="space-y-3">
             {route.stops.map((stop, i) => (
               <motion.div
@@ -82,8 +82,17 @@ export default function RoutePreviewPage() {
                 onClick={() => navigate('/stop/' + stop.id)}
                 className="flex items-center gap-3 cursor-pointer"
               >
-                <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center text-xs font-semibold text-primary">
-                  {i + 1}
+                <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 relative">
+                  {stop.imageUrl ? (
+                    <img src={stop.imageUrl} alt={stop.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full bg-primary/10 flex items-center justify-center">
+                      <MapPin className="text-primary" size={14} />
+                    </div>
+                  )}
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                    <span className="text-[10px] font-bold text-white">{i + 1}</span>
+                  </div>
                 </div>
                 <div className="flex-1">
                   <p className="text-sm font-medium text-foreground">{stop.name}</p>

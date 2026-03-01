@@ -17,11 +17,16 @@ export default function StopDetailPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Image placeholder */}
-      <div className="h-48 bg-secondary/15 relative">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <MapPin className="text-secondary" size={32} />
-        </div>
+      {/* Hero image */}
+      <div className="h-56 relative">
+        {spot.imageUrl ? (
+          <img src={spot.imageUrl} alt={spot.name} className="w-full h-full object-cover" />
+        ) : (
+          <div className="w-full h-full bg-secondary/15 flex items-center justify-center">
+            <MapPin className="text-secondary" size={32} />
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
         <button onClick={() => navigate(-1)} className="absolute top-12 left-4 w-9 h-9 rounded-full bg-card/90 backdrop-blur flex items-center justify-center shadow-ios">
           <ChevronLeft size={20} className="text-foreground" />
         </button>

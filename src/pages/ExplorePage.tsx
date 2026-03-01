@@ -53,10 +53,16 @@ export default function ExplorePage() {
           <button
             key={spot.id}
             onClick={() => navigate('/stop/' + spot.id)}
-            className="w-full ios-card p-4 flex items-center gap-3 text-left"
+            className="w-full ios-card p-3 flex items-center gap-3 text-left overflow-hidden"
           >
-            <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center flex-shrink-0">
-              <MapPin className="text-primary" size={20} />
+            <div className="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0">
+              {spot.imageUrl ? (
+                <img src={spot.imageUrl} alt={spot.name} className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full bg-muted flex items-center justify-center">
+                  <MapPin className="text-primary" size={20} />
+                </div>
+              )}
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-foreground truncate">{spot.name}</p>
