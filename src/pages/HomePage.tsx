@@ -5,6 +5,7 @@ import { useApp } from '@/context/AppContext';
 import { seedSpots, seedChallenges } from '@/data/seedData';
 import BottomTabBar from '@/components/BottomTabBar';
 
+import heroImg from '@/assets/hero/santorini.jpg';
 
 
 function getGreeting() {
@@ -30,43 +31,53 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-background pb-24">
-      {/* Compact header — no hero image, just editorial type */}
-      <div className="px-5 pt-14 pb-1">
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-          <p className="text-[10px] text-muted-foreground tracking-widest uppercase">{getGreeting()}</p>
-          <div className="flex items-baseline gap-2 mt-1">
-            <h1 className="text-[1.65rem] font-display text-foreground leading-none">{user.name}</h1>
-            <span className="text-[10px] text-muted-foreground italic font-display">· explorer</span>
-          </div>
-        </motion.div>
+      {/* Hero header — compact */}
+      <div className="relative h-[180px] overflow-hidden">
+        <motion.img
+          src={heroImg}
+          alt=""
+          initial={{ scale: 1.08 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 1.2, ease: 'easeOut' }}
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+        <div className="grain absolute inset-0 pointer-events-none" />
 
-        {/* Stats as a minimal inline row */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="flex items-center gap-4 mt-3"
-        >
-          <div className="flex items-center gap-1.5">
-            <Trophy size={13} className="text-accent" />
-            <span className="text-sm font-semibold text-foreground">{user.points}</span>
-            <span className="text-[10px] text-muted-foreground">pts</span>
-          </div>
-          <div className="w-px h-3 bg-border" />
-          <div className="flex items-center gap-1.5">
-            <Flame size={13} className="text-primary" />
-            <span className="text-sm font-semibold text-foreground">{user.streak}</span>
-            <span className="text-[10px] text-muted-foreground">day streak</span>
-          </div>
-          <div className="w-px h-3 bg-border" />
-          <div className="flex items-center gap-1.5">
-            <Compass size={13} className="text-secondary" />
-            <span className="text-sm font-semibold text-foreground">{user.routesCompleted}</span>
-            <span className="text-[10px] text-muted-foreground">routes</span>
-          </div>
-        </motion.div>
+        <div className="absolute bottom-0 left-0 right-0 px-5 pb-4">
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.5 }}>
+            <p className="text-[10px] text-muted-foreground tracking-widest uppercase">{getGreeting()}</p>
+            <div className="flex items-baseline gap-2 mt-0.5">
+              <h1 className="text-[1.5rem] font-display text-foreground leading-none">{user.name}</h1>
+              <span className="text-[10px] text-muted-foreground italic font-display">· explorer</span>
+            </div>
+          </motion.div>
 
-        <div className="editorial-rule mt-4" />
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.25, duration: 0.5 }}
+            className="flex items-center gap-4 mt-2.5"
+          >
+            <div className="flex items-center gap-1.5">
+              <Trophy size={13} className="text-accent" />
+              <span className="text-sm font-semibold text-foreground">{user.points}</span>
+              <span className="text-[10px] text-muted-foreground">pts</span>
+            </div>
+            <div className="w-px h-3 bg-border/50" />
+            <div className="flex items-center gap-1.5">
+              <Flame size={13} className="text-primary" />
+              <span className="text-sm font-semibold text-foreground">{user.streak}</span>
+              <span className="text-[10px] text-muted-foreground">day streak</span>
+            </div>
+            <div className="w-px h-3 bg-border/50" />
+            <div className="flex items-center gap-1.5">
+              <Compass size={13} className="text-secondary" />
+              <span className="text-sm font-semibold text-foreground">{user.routesCompleted}</span>
+              <span className="text-[10px] text-muted-foreground">routes</span>
+            </div>
+          </motion.div>
+        </div>
       </div>
 
       {/* Start route — fluid, not boxy */}
