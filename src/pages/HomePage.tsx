@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Compass, Flame, Trophy, ChevronRight, MapPin, Target, ArrowUpRight } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+import { seedSpots } from '@/data/seedData';
 import BottomTabBar from '@/components/BottomTabBar';
 
 function getGreeting() {
@@ -11,13 +12,15 @@ function getGreeting() {
   return 'Good evening';
 }
 
+const trendingSpots = [seedSpots[0], seedSpots[4], seedSpots[1]];
+
 export default function HomePage() {
   const { user } = useApp();
   const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-background pb-24 grain">
-      {/* Header — editorial style */}
+      {/* Header */}
       <div className="px-6 pt-14 pb-2">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}>
           <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-medium">
@@ -28,7 +31,7 @@ export default function HomePage() {
         </motion.div>
       </div>
 
-      {/* Stats — inline, not carded */}
+      {/* Stats */}
       <div className="px-6 py-4 flex items-center gap-6">
         <div className="flex items-center gap-2">
           <Trophy className="text-accent" size={16} />
@@ -43,7 +46,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Primary CTA — full-bleed gradient, not a card */}
+      {/* Primary CTA */}
       <div className="px-5 mb-8">
         <motion.button
           whileTap={{ scale: 0.98 }}
@@ -63,12 +66,11 @@ export default function HomePage() {
             </p>
           </div>
           <ChevronRight className="absolute right-5 top-1/2 -translate-y-1/2 text-primary-foreground/40" size={24} />
-          {/* Decorative circle */}
           <div className="absolute -bottom-8 -right-8 w-32 h-32 rounded-full bg-primary-foreground/5" />
         </motion.button>
       </div>
 
-      {/* Quick actions — asymmetric, text-led instead of icon-centered */}
+      {/* Quick actions */}
       <div className="px-6 mb-8 flex gap-3">
         <motion.button
           whileTap={{ scale: 0.97 }}
@@ -90,25 +92,34 @@ export default function HomePage() {
         </motion.button>
       </div>
 
-      {/* Trending — editorial list, not card carousel */}
+      {/* Trending — with real photos */}
       <div className="px-6 mb-8">
         <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground font-semibold mb-3">
           Trending near you
         </p>
         <div className="space-y-0 divide-y divide-border">
-          {['Hidden Mural Alley', 'Rooftop Garden Café', 'Sunset Overlook'].map((name, i) => (
+          {trendingSpots.map((spot, i) => (
             <motion.button
-              key={name}
+              key={spot.id}
               initial={{ opacity: 0, x: -8 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.15 + i * 0.08 }}
-              className="w-full flex items-center justify-between py-3.5 group text-left"
+              onClick={() => navigate('/stop/' + spot.id)}
+              className="w-full flex items-center justify-between py-3 group text-left"
             >
               <div className="flex items-center gap-3">
-                <span className="text-xs text-muted-foreground/60 font-mono w-4">{String(i + 1).padStart(2, '0')}</span>
+                <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0">
+                  {spot.imageUrl ? (
+                    <img src={spot.imageUrl} alt={spot.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full bg-muted flex items-center justify-center">
+                      <MapPin size={14} className="text-muted-foreground" />
+                    </div>
+                  )}
+                </div>
                 <div>
-                  <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">{name}</p>
-                  <p className="text-[10px] text-muted-foreground">0.{i + 2} mi</p>
+                  <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">{spot.name}</p>
+                  <p className="text-[10px] text-muted-foreground">{spot.category} · 0.{i + 2} mi</p>
                 </div>
               </div>
               <ArrowUpRight className="text-muted-foreground/40 group-hover:text-primary transition-colors" size={14} />
@@ -117,7 +128,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Weekly leaderboard — compact, editorial */}
+      {/* Weekly leaderboard */}
       <div className="px-6 mb-6">
         <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground font-semibold mb-3">
           Weekly Leaderboard

@@ -1,16 +1,27 @@
 import { Spot, Challenge, Badge, Memory } from '@/types';
 
+import muralAlley from '@/assets/spots/mural-alley.jpg';
+import rooftopCafe from '@/assets/spots/rooftop-cafe.jpg';
+import forestTrail from '@/assets/spots/forest-trail.jpg';
+import vinylShop from '@/assets/spots/vinyl-shop.jpg';
+import sunsetOverlook from '@/assets/spots/sunset-overlook.jpg';
+import dumplingHouse from '@/assets/spots/dumpling-house.jpg';
+import curiosityShop from '@/assets/spots/curiosity-shop.jpg';
+import bookExchange from '@/assets/spots/book-exchange.jpg';
+import lavenderPark from '@/assets/spots/lavender-park.jpg';
+import speakeasy from '@/assets/spots/speakeasy.jpg';
+
 export const seedSpots: Spot[] = [
-  { id: 's1', name: 'Hidden Mural Alley', category: 'Art', lat: 37.7749, lng: -122.4194, shortDescription: 'A vibrant alley filled with local street art, constantly evolving.', modeTags: ['culture', 'adventure'], travelTags: ['walking'], imageUrl: '' },
-  { id: 's2', name: 'Rooftop Garden Café', category: 'Café', lat: 37.7751, lng: -122.4180, shortDescription: 'Tiny rooftop café with the best pour-over and city views.', modeTags: ['foodie', 'social'], travelTags: ['walking', 'driving'], imageUrl: '' },
-  { id: 's3', name: 'Whispering Pines Trail', category: 'Nature', lat: 37.7760, lng: -122.4210, shortDescription: 'A short forest trail that feels miles from the city.', modeTags: ['nature', 'adventure'], travelTags: ['walking'], imageUrl: '' },
-  { id: 's4', name: 'The Vinyl Basement', category: 'Music', lat: 37.7745, lng: -122.4175, shortDescription: 'Underground record shop with rare finds and live sessions.', modeTags: ['culture', 'social'], travelTags: ['walking', 'driving'], imageUrl: '' },
-  { id: 's5', name: 'Sunset Overlook', category: 'Viewpoint', lat: 37.7770, lng: -122.4230, shortDescription: 'The locals\' secret spot for golden hour views.', modeTags: ['nature', 'adventure', 'mystery'], travelTags: ['walking', 'driving'], imageUrl: '' },
-  { id: 's6', name: 'Grandmother\'s Dumpling House', category: 'Restaurant', lat: 37.7740, lng: -122.4165, shortDescription: 'Family-run for 40 years. The soup dumplings are legendary.', modeTags: ['foodie', 'culture'], travelTags: ['walking', 'driving'], imageUrl: '' },
-  { id: 's7', name: 'The Curiosity Shop', category: 'Retail', lat: 37.7755, lng: -122.4195, shortDescription: 'Antiques, oddities, and stories in every corner.', modeTags: ['mystery', 'culture'], travelTags: ['walking'], imageUrl: '' },
-  { id: 's8', name: 'Community Book Exchange', category: 'Community', lat: 37.7748, lng: -122.4188, shortDescription: 'A little free library that became a neighborhood gathering spot.', modeTags: ['social', 'culture'], travelTags: ['walking'], imageUrl: '' },
-  { id: 's9', name: 'Lavender Fields Park', category: 'Park', lat: 37.7780, lng: -122.4250, shortDescription: 'Urban pocket park with fragrant lavender rows and benches.', modeTags: ['nature'], travelTags: ['walking', 'driving'], imageUrl: '' },
-  { id: 's10', name: 'The Secret Speakeasy', category: 'Bar', lat: 37.7738, lng: -122.4172, shortDescription: 'Ring the bell behind the bookshelf. You\'ll know when you find it.', modeTags: ['mystery', 'social', 'foodie'], travelTags: ['walking', 'driving'], imageUrl: '' },
+  { id: 's1', name: 'Hidden Mural Alley', category: 'Art', lat: 37.7749, lng: -122.4194, shortDescription: 'A vibrant alley filled with local street art, constantly evolving.', modeTags: ['culture', 'adventure'], travelTags: ['walking'], imageUrl: muralAlley },
+  { id: 's2', name: 'Rooftop Garden Café', category: 'Café', lat: 37.7751, lng: -122.4180, shortDescription: 'Tiny rooftop café with the best pour-over and city views.', modeTags: ['foodie', 'social'], travelTags: ['walking', 'driving'], imageUrl: rooftopCafe },
+  { id: 's3', name: 'Whispering Pines Trail', category: 'Nature', lat: 37.7760, lng: -122.4210, shortDescription: 'A short forest trail that feels miles from the city.', modeTags: ['nature', 'adventure'], travelTags: ['walking'], imageUrl: forestTrail },
+  { id: 's4', name: 'The Vinyl Basement', category: 'Music', lat: 37.7745, lng: -122.4175, shortDescription: 'Underground record shop with rare finds and live sessions.', modeTags: ['culture', 'social'], travelTags: ['walking', 'driving'], imageUrl: vinylShop },
+  { id: 's5', name: 'Sunset Overlook', category: 'Viewpoint', lat: 37.7770, lng: -122.4230, shortDescription: 'The locals\' secret spot for golden hour views.', modeTags: ['nature', 'adventure', 'mystery'], travelTags: ['walking', 'driving'], imageUrl: sunsetOverlook },
+  { id: 's6', name: 'Grandmother\'s Dumpling House', category: 'Restaurant', lat: 37.7740, lng: -122.4165, shortDescription: 'Family-run for 40 years. The soup dumplings are legendary.', modeTags: ['foodie', 'culture'], travelTags: ['walking', 'driving'], imageUrl: dumplingHouse },
+  { id: 's7', name: 'The Curiosity Shop', category: 'Retail', lat: 37.7755, lng: -122.4195, shortDescription: 'Antiques, oddities, and stories in every corner.', modeTags: ['mystery', 'culture'], travelTags: ['walking'], imageUrl: curiosityShop },
+  { id: 's8', name: 'Community Book Exchange', category: 'Community', lat: 37.7748, lng: -122.4188, shortDescription: 'A little free library that became a neighborhood gathering spot.', modeTags: ['social', 'culture'], travelTags: ['walking'], imageUrl: bookExchange },
+  { id: 's9', name: 'Lavender Fields Park', category: 'Park', lat: 37.7780, lng: -122.4250, shortDescription: 'Urban pocket park with fragrant lavender rows and benches.', modeTags: ['nature'], travelTags: ['walking', 'driving'], imageUrl: lavenderPark },
+  { id: 's10', name: 'The Secret Speakeasy', category: 'Bar', lat: 37.7738, lng: -122.4172, shortDescription: 'Ring the bell behind the bookshelf. You\'ll know when you find it.', modeTags: ['mystery', 'social', 'foodie'], travelTags: ['walking', 'driving'], imageUrl: speakeasy },
 ];
 
 export const seedChallenges: Challenge[] = [
@@ -32,7 +43,7 @@ export const seedBadges: Badge[] = [
 ];
 
 export const seedMemories: Memory[] = [
-  { id: 'm1', userId: 'u1', spotId: 's1', mediaUrl: '', caption: 'Found this incredible mural of a phoenix rising!', visibility: 'public', createdAt: '2026-02-27T10:30:00Z', likes: 24, spotName: 'Hidden Mural Alley' },
-  { id: 'm2', userId: 'u2', spotId: 's5', mediaUrl: '', caption: 'Golden hour hits different from up here', visibility: 'public', createdAt: '2026-02-26T18:15:00Z', likes: 42, spotName: 'Sunset Overlook' },
-  { id: 'm3', userId: 'u3', spotId: 's6', mediaUrl: '', caption: 'Best dumplings I\'ve ever had. No debate.', visibility: 'public', createdAt: '2026-02-25T12:45:00Z', likes: 18, spotName: 'Grandmother\'s Dumpling House' },
+  { id: 'm1', userId: 'u1', spotId: 's1', mediaUrl: muralAlley, caption: 'Found this incredible mural of a phoenix rising!', visibility: 'public', createdAt: '2026-02-27T10:30:00Z', likes: 24, spotName: 'Hidden Mural Alley' },
+  { id: 'm2', userId: 'u2', spotId: 's5', mediaUrl: sunsetOverlook, caption: 'Golden hour hits different from up here', visibility: 'public', createdAt: '2026-02-26T18:15:00Z', likes: 42, spotName: 'Sunset Overlook' },
+  { id: 'm3', userId: 'u3', spotId: 's6', mediaUrl: dumplingHouse, caption: 'Best dumplings I\'ve ever had. No debate.', visibility: 'public', createdAt: '2026-02-25T12:45:00Z', likes: 18, spotName: 'Grandmother\'s Dumpling House' },
 ];
