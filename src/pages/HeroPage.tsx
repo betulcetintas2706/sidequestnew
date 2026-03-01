@@ -121,25 +121,26 @@ export default function HeroPage() {
             "The most interesting way there."
           </motion.p>
 
-          {/* Swipe-up pill CTA */}
+          {/* Minimal text CTA */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1, duration: 0.6 }}
-            className="flex flex-col items-center gap-3"
+            className="flex flex-col items-center gap-4"
           >
             <motion.button
               onClick={handleStart}
-              whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-2 px-6 py-3 rounded-full bg-foreground/10 backdrop-blur-xl border border-foreground/10 text-foreground text-sm font-medium"
+              whileTap={{ scale: 0.97 }}
+              className="text-base font-semibold text-foreground tracking-wide"
             >
               <motion.span
-                animate={{ y: [0, -3, 0] }}
+                animate={{ y: [0, -2, 0] }}
                 transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+                className="inline-block mr-1.5 text-primary"
               >
                 ↑
               </motion.span>
-              Start exploring
+              Start a SideQuest
             </motion.button>
 
             <button
