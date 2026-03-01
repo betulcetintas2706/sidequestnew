@@ -5,29 +5,36 @@ import { Compass, Map, Camera, Sparkles, ChevronRight } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { NavigatorMode } from '@/types';
 
+import santorini from '@/assets/hero/santorini.jpg';
+import kyoto from '@/assets/hero/kyoto.jpg';
+import amalfi from '@/assets/hero/amalfi.jpg';
+import patagonia from '@/assets/hero/patagonia.jpg';
+
 const modeIcons: Record<string, string> = {
   adventure: '🧭', foodie: '🍜', nature: '🌿', culture: '🎭', social: '🤝', mystery: '🔮',
 };
 
+const bgImages = [santorini, kyoto, amalfi, patagonia];
+
 const pages = [
   {
-    icon: <Map className="text-primary" size={40} />,
+    icon: <Map className="text-primary" size={28} />,
     title: 'Discovery routes, not fastest routes.',
     desc: 'SideQuest adds curated detours to your journey — hidden gems, scenic spots, and places you\'d never find on your own.',
   },
   {
-    icon: <Compass className="text-primary" size={40} />,
+    icon: <Compass className="text-primary" size={28} />,
     title: 'Pick a Navigator Mode.',
     desc: 'Choose how you want to explore. Each mode unlocks different types of stops and experiences.',
     hasModePicker: true,
   },
   {
-    icon: <Camera className="text-primary" size={40} />,
+    icon: <Camera className="text-primary" size={28} />,
     title: 'Save memories and earn points.',
-    desc: 'Capture moments along the way. Keep them private in your Vault or share with the community to earn points and climb leaderboards.',
+    desc: 'Capture moments along the way. Keep them private in your Vault or share with the community to climb leaderboards.',
   },
   {
-    icon: <Sparkles className="text-primary" size={40} />,
+    icon: <Sparkles className="text-primary" size={28} />,
     title: 'Ready to explore?',
     desc: 'Sign in to save your progress across devices, or continue as a guest.',
     hasAuth: true,
@@ -48,73 +55,139 @@ export default function OnboardingPage() {
   };
 
   const next = () => { if (page < pages.length - 1) setPage(page + 1); };
-
   const current = pages[page];
 
   return (
-    <div className="min-h-screen flex flex-col bg-background px-6 pt-16 pb-10">
-      {/* Progress dots */}
-      <div className="flex gap-2 justify-center mb-12">
-        {pages.map((_, i) => (
-          <div key={i} className={`h-1.5 rounded-full transition-all duration-300 ${i === page ? 'w-8 bg-primary' : 'w-1.5 bg-border'}`} />
-        ))}
+    <div className="min-h-screen flex flex-col bg-background relative overflow-hidden">
+      {/* Background image — subtle, matches hero aesthetic */}
+      <div className="absolute inset-0">
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={page}
+            src={bgImages[page]}
+            alt=""
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 0.15, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8 }}
+            className="w-full h-full object-cover"
+          />
+        </AnimatePresence>
+        <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/80 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/90 to-transparent" />
       </div>
 
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={page}
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -30 }}
-          transition={{ duration: 0.3 }}
-          className="flex-1 flex flex-col"
-        >
-          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
-            {current.icon}
-          </div>
+      {/* Content */}
+      <div className="relative z-10 flex-1 flex flex-col px-6 pt-16 pb-10 safe-bottom">
+        {/* Progress dots */}
+        <div className="flex gap-2 justify-center mb-14">
+          {pages.map((_, i) => (
+            <motion.div
+              key={i}
+              animate={{ width: i === page ? 32 : 6 }}
+              className={`h-1.5 rounded-full transition-colors duration-300 ${i === page ? 'bg-primary' : 'bg-border'}`}
+            />
+          ))}
+        </div>
 
-          <h2 className="text-2xl font-display mb-3 text-foreground">{current.title}</h2>
-          <p className="text-muted-foreground text-sm leading-relaxed mb-8">{current.desc}</p>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={page}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="flex-1 flex flex-col"
+          >
+            {/* Icon */}
+            <div className="w-14 h-14 rounded-2xl bg-primary/10 backdrop-blur-sm flex items-center justify-center mb-6 border border-primary/10">
+              {current.icon}
+            </div>
 
-          {current.hasModePicker && (
-            <div className="grid grid-cols-3 gap-3 mb-8">
-              {(Object.keys(modeIcons) as NavigatorMode[]).map(mode => (
-                <button
-                  key={mode}
-                  onClick={() => setSelectedMode(mode)}
-                  className={`ios-card p-3 flex flex-col items-center gap-1.5 transition-all ${selectedMode === mode ? 'ring-2 ring-primary bg-primary/5' : ''}`}
+            {/* Editorial rule */}
+            <div className="editorial-rule mb-4" />
+
+            {/* Title */}
+            <h2 className="text-[1.65rem] leading-tight font-display mb-3 text-foreground">
+              {current.title}
+            </h2>
+
+            {/* Description */}
+            <p className="text-muted-foreground text-sm leading-relaxed mb-8 max-w-[28ch]">
+              {current.desc}
+            </p>
+
+            {/* Mode picker */}
+            {current.hasModePicker && (
+              <div className="grid grid-cols-3 gap-2.5 mb-8">
+                {(Object.keys(modeIcons) as NavigatorMode[]).map(mode => (
+                  <motion.button
+                    key={mode}
+                    onClick={() => setSelectedMode(mode)}
+                    whileTap={{ scale: 0.95 }}
+                    className={`relative p-3.5 rounded-xl flex flex-col items-center gap-1.5 transition-all duration-200
+                      ${selectedMode === mode
+                        ? 'bg-primary/10 ring-2 ring-primary shadow-sm'
+                        : 'bg-card/80 backdrop-blur-sm border border-border/60 hover:border-primary/30'
+                      }`}
+                  >
+                    <span className="text-2xl">{modeIcons[mode]}</span>
+                    <span className="text-[11px] font-semibold capitalize text-foreground tracking-wide">{mode}</span>
+                    {selectedMode === mode && (
+                      <motion.div
+                        layoutId="modeCheck"
+                        className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-primary flex items-center justify-center"
+                      >
+                        <span className="text-primary-foreground text-[9px]">✓</span>
+                      </motion.div>
+                    )}
+                  </motion.button>
+                ))}
+              </div>
+            )}
+
+            {/* Auth buttons */}
+            {current.hasAuth && (
+              <div className="space-y-3 mb-8">
+                <motion.button
+                  onClick={() => finish('apple')}
+                  whileTap={{ scale: 0.97 }}
+                  className="w-full py-3.5 rounded-2xl bg-foreground text-background font-semibold text-sm flex items-center justify-center gap-2 shadow-md"
                 >
-                  <span className="text-2xl">{modeIcons[mode]}</span>
-                  <span className="text-xs font-medium capitalize text-foreground">{mode}</span>
+                   Continue with Apple
+                </motion.button>
+                <motion.button
+                  onClick={() => finish('google')}
+                  whileTap={{ scale: 0.97 }}
+                  className="w-full py-3.5 rounded-2xl bg-card/90 backdrop-blur-sm border border-border font-semibold text-sm flex items-center justify-center gap-2 text-foreground shadow-sm"
+                >
+                  Continue with Google
+                </motion.button>
+                <button
+                  onClick={() => finish('guest')}
+                  className="w-full py-3 text-muted-foreground text-sm font-medium hover:text-foreground transition-colors"
+                >
+                  Continue as Guest
                 </button>
-              ))}
-            </div>
-          )}
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
 
-          {current.hasAuth && (
-            <div className="space-y-3 mb-8">
-              <button onClick={() => finish('apple')} className="w-full py-3.5 rounded-2xl bg-foreground text-background font-semibold text-sm flex items-center justify-center gap-2">
-                 Continue with Apple
-              </button>
-              <button onClick={() => finish('google')} className="w-full py-3.5 rounded-2xl bg-card border border-border font-semibold text-sm flex items-center justify-center gap-2 text-foreground">
-                Continue with Google
-              </button>
-              <button onClick={() => finish('guest')} className="w-full py-3 text-muted-foreground text-sm font-medium">
-                Continue as Guest
-              </button>
-            </div>
-          )}
-        </motion.div>
-      </AnimatePresence>
+        {/* Next button — matches hero minimal style */}
+        {!current.hasAuth && (
+          <motion.button
+            onClick={next}
+            whileTap={{ scale: 0.97 }}
+            className="w-full py-4 rounded-2xl bg-primary text-primary-foreground font-semibold text-base flex items-center justify-center gap-2 shadow-md mt-auto"
+          >
+            Next <ChevronRight size={18} />
+          </motion.button>
+        )}
+      </div>
 
-      {!current.hasAuth && (
-        <button
-          onClick={next}
-          className="w-full py-4 rounded-2xl bg-primary text-primary-foreground font-semibold text-base flex items-center justify-center gap-2 active:scale-[0.98] transition-transform mt-auto"
-        >
-          Next <ChevronRight size={18} />
-        </button>
-      )}
+      {/* Grain texture overlay */}
+      <div className="grain absolute inset-0 pointer-events-none z-20" />
     </div>
   );
 }
